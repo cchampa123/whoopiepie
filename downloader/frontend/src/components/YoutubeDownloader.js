@@ -34,6 +34,7 @@ class YoutubeDownloader extends React.Component {
       },
       {
         headers:{
+          'Content-Type': 'application/json',
           'Authorization':'Token '+this.props.token
         }
       }
