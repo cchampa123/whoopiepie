@@ -30,7 +30,7 @@ class YoutubeDownloader extends React.Component {
         'youtube_url':this.state.youtube_url,
         'artist':this.state.artist,
         'album':this.state.album,
-        'title':this.state.album,
+        'title':this.state.title,
       },
       {
         headers:{
