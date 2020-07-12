@@ -1,6 +1,6 @@
 env
 node_modules
-downloader/downloader/secrets.py
+downloader/downloader/secret_settings.py
 
 ### Django ###
 *.log
