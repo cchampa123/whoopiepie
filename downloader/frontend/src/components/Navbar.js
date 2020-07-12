@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 function NavItem(props) {
   return (
-    <Link to={props.link}>{props.text}</Link>
+    <ul><Link to={props.link}>{props.text}</Link></ul>
   )
 }
 
@@ -12,9 +12,7 @@ class Navbar extends React.Component {
     const navItems = this.props.list.map(item => <NavItem key={item.id} link={item.link} text={item.text}/>)
     return (
       <nav className="navbar navbar-default">
-        <ul>
           {navItems}
-        </ul>
       </nav>
     )
   }

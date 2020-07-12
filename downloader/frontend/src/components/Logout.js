@@ -17,18 +17,13 @@ class Logout extends React.Component {
   }
 
   render() {
-    if (this.props.authenticated) {
-      return (
-        <Redirect to='/' />
-      )
-    } else {
-      return (
-        <div>
-          <h2>You have been logged out.</h2>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <h2>You have been logged out.</h2>
+      </div>
+    )
   }
 }
+
 
 export default Logout;

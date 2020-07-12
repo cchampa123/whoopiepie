@@ -63,7 +63,7 @@ class App extends React.Component {
               />
               <Route
                 exact path='/logout'
-                render={() => <Logout handleLogout={this.handleLogout}/>}
+                render={() => <Logout handleLogout={this.handleLogout} token={this.state.token}/>}
               />
             </Switch>
           </div>

@@ -29,12 +29,13 @@ class Login extends React.Component {
       this.props.handleLogin(res.data)
       }
     )
-    .catch(
+    .catch(error => {
       this.setState({
         username:"",
         password:"",
         invalid_credentials:true
       })
+    }
     )
   }
 
