@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from .secret_settings import DJANGO_SECRET_KEY, HOST_IP, MUSIC_ROOT_SETTING
+from .secret_settings import DJANGO_SECRET_KEY, HOST_IP, MUSIC_ROOT_SETTING, DEBUG_SETTING
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG_SETTING
 
-ALLOWED_HOSTS = [HOST_IP]
+ALLOWED_HOSTS = HOST_IP
 
 MUSIC_ROOT = MUSIC_ROOT_SETTING
 
