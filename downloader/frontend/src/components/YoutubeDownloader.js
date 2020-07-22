@@ -57,7 +57,7 @@ class YoutubeDownloader extends React.Component {
         tv_show:"",
         season:"",
         episode:"",
-        audio_video:"",
+        audio_video:"audio",
         loading:false
       })
     )
