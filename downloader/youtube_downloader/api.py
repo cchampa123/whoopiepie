@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import YoutubeUrlSerializer
 from django.conf import settings
+import youtube_dl
 import os
 
 class YoutubeUrlView(APIView):
@@ -31,9 +32,21 @@ class YoutubeUrlView(APIView):
 
             file_path = os.path.join(path_album, request.data['title'])
             for_command = file_path+".%(ext)s"
-            metadata = '''--add-metadata --postprocessor-args '-metadata Title="'''+request.data['title']+'''" -metadata Artist="'''+request.data['artist']+'''" -metadata Album="'''+album+'"'+"'"
-            download_command = "cpulimit -l 75 -- youtube-dl -x --audio-format mp3 "+metadata+" -o '"+for_command+"' "+request.data['youtube_url']
-            os.system(download_command)
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'outtmpl': for_command,
+                'postprocessors': [
+                    {'key': 'FFmpegExtractAudio',
+                     'preferredcodec': 'mp3'},
+                    {'key': 'FFmpegMetadata'}
+                    ],
+                'postprocessor_args': ['-metadata', 'Title='+request.data['title'],
+                                       '-metadata', 'Artist='+request.data['artist'],
+                                       '-metadata', 'Album='+album]
+                }
+
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([request.data['youtube_url']])
         else:
             tv_root = os.path.join(settings.PLEX_ROOT, 'shows')
             if request.data['season'] == '':
@@ -56,7 +69,16 @@ class YoutubeUrlView(APIView):
                 os.mkdir(path_season)
             file_path = path_season + "/" + request.data['tv_show']+' - s'+season+'e'+episode
             for_command = file_path+".%(ext)s"
-            metadata = '''-f best --add-metadata --postprocessor-args '-metadata Title="'''+request.data['title']+'"'+"'"
-            download_command = "cpulimit -l 75 -- youtube-dl "+metadata+" -o '"+for_command+"' "+request.data['youtube_url']
-            os.system(download_command)
+            ydl_opts = {
+                'format': 'best',
+                'outtmpl': for_command,
+                'postprocessors': [
+                    {'key': 'FFmpegMetadata',}
+                    ],
+                'postprocessor_args': ['-metadata', 'Title='+request.data['title']]
+                }
+
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([request.data['youtube_url']])
+
         return Response(status=status.HTTP_200_OK)

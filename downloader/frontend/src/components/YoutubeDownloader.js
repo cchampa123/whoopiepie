@@ -29,7 +29,6 @@ class YoutubeDownloader extends React.Component {
   handleSubmit(event) {
     event.preventDefault()
     this.setState((prevState) => ({...prevState, loading: true}))
-    console.log(this.state)
     axios.post('/api/downloader/youtube_url/',
       {
         'youtube_url':this.state.youtube_url,
@@ -65,11 +64,9 @@ class YoutubeDownloader extends React.Component {
 
   render() {
     let form_options;
-    console.log(this.state.audio_video)
     if (this.state.loading) {
       return (<h2>Loading...</h2>)
     } else if (this.state.audio_video === "audio") {
-      console.log('hiya')
       form_options = (
           <div>
             <div className="form-group">
