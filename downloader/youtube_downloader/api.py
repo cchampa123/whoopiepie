@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from .serializers import YoutubeUrlSerializer
 from django.conf import settings
 import youtube_dl
-from __future__ import unicode_literals
 import os
 
 class YoutubeUrlView(APIView):
