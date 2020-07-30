@@ -37,7 +37,7 @@ class YoutubeUrlView(APIView):
                 'outtmpl': for_command,
                 'postprocessors': [
                     {'key': 'FFmpegExtractAudio',
-                     'preferredcodec': 'mp3'},
+                     'preferredcodec': 'mp4'},
                     {'key': 'FFmpegMetadata'}
                     ],
                 'postprocessor_args': ['-metadata', 'Title='+request.data['title'],
