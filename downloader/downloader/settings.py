@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'youtube_downloader',
     'rest_framework',
     'frontend',
+    'workout',
     'knox',
 ]
 

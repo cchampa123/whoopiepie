@@ -22,4 +22,5 @@ urlpatterns = [
     re_path('^(?!api).*', include('frontend.urls')),
     path('api/downloader/', include('youtube_downloader.urls')),
     path('api/auth/', include('accounts.urls')),
+    path('api/workout', include('workout.urls'))
 ]

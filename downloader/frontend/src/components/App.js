@@ -6,6 +6,7 @@ import PrivateRoute from './common/PrivateRoute'
 import Login from './Login';
 import Logout from './Logout';
 import YoutubeDownloader from './YoutubeDownloader';
+import WorkoutTracker from './WorkoutTracker'
 import Navbar from './Navbar'
 
 class App extends React.Component {
@@ -41,7 +42,8 @@ class App extends React.Component {
   render() {
     const nav = [
       {id:1, link: '/logout', text: 'Log Out'},
-      {id:2, link: '/login', text: 'Log In'}
+      {id:2, link: '/login', text: 'Log In'},
+      {id:3, link: '/workout', text: 'Workout Tracker'}
     ]
     return (
       <div>
@@ -56,6 +58,13 @@ class App extends React.Component {
                 isAuthenticated={this.state.authenticated}
                 token={this.state.token}
                 comp={YoutubeDownloader}
+              />
+              <PrivateRoute
+                exact
+                path="/workout"
+                isAuthenticated={this.state.authenticated}
+                token={this.state.token}
+                comp={WorkoutTracker}
               />
               <Route
                 exact path='/login'
