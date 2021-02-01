@@ -21,7 +21,8 @@ class SectionAdder extends React.Component {
     {
       'metric_type':this.state.newSectionMetricType,
       'rounds':this.state.newSectionRounds,
-      'workout':this.props.workout_id
+      'workout':this.props.workout_id,
+      'movements':[]
     }).then(res => this.props.completion(res.data))
   }
 

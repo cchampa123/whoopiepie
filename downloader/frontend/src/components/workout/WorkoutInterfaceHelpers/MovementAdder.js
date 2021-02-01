@@ -22,8 +22,11 @@ class MovementAdder extends React.Component {
       'name':this.props.movement_name,
       'metric_type':this.state.newMovementMetricType,
       'metric':this.state.newMovementMetric
-
-    }).then((res) => this.props.completion(res.data))
+    }).then((res) => axios.patch('/api/workout/movement_instance/'+String(this.props.movement_id)+'/',
+            {
+              'name':res.data.id
+            }
+          ).then(res => this.props.completion()))
   }
 
   render() {

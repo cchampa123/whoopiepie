@@ -1,44 +1,80 @@
 import React from 'react';
-import Movement from './Movement'
+import Movement from './Movement';
+import axios from 'axios';
 
 class Section extends React.Component {
 
   constructor() {
     super()
-    this.state = {}
-    this.addMovementLocal = this.addMovementLocal.bind(this)
+    this.state = {
+      id:-1,
+      metric_type:'',
+      rounds:'',
+      time:'',
+      workout:'',
+      movements:[],
+      added_movement:false,
+      fetch_data:false
+    }
+    this.addMovement = this.addMovement.bind(this)
+    this.update_section_data = this.update_section_data.bind(this)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.movements !== this.props.movements) {
-      this.setState({})
+  update_section_data() {
+    return (
+      axios.get('/api/workout/section/'+this.props.section_id+'/').then(res => {
+        this.setState({
+          id:res.data.id,
+          metric_type:res.data.metric_type,
+          rounds:res.data.rounds,
+          time:res.data.time,
+          workout:res.data.workout,
+          movements:res.data.movements
+        })
+      })
+    )
+  }
+
+  componentDidMount() {
+    this.update_section_data()
+  }
+
+  componentDidUpdate() {
+    if (this.state.fetch_data) {
+      this.update_section_data().then(
+        this.setState({...this.state, fetch_data:false})
+      )
     }
   }
 
-  addMovementLocal () {
-    this.props.addMovement(this.props.id)
+  addMovement () {
+    axios.post('/api/workout/movement_instance/',
+      {
+        'metric_type_value':0,
+        'metric_value':0,
+        'name':1,
+        'section':this.props.section_id
+      }
+    ).then(this.setState({...this.state, fetch_data:true}))
   }
 
   render() {
-    const movements = this.props.movements.map(function(x, index) {
-                    const filtered = this.props.possible_movements.filter(y => y.id===x.id)
-                    const movement_to_render = filtered.length > 0 ? filtered[0] : {id:-1, name:'', metric_type:'Reps', metric_type_value:'Weight'}
-                    return (<Movement
-                              key={index}
-                              id={index}
-                              possible_movements={this.props.possible_movements}
-                              section_id={this.props.section_id}
-                              selected_movement={movement_to_render}
-                              handleUpdateMovementName={this.props.handleUpdateMovementName}
-                              handleUpdateMovementData={this.props.handleUpdateMovementData}
-                            />
-                          )
+    const movements = this.state.movements.map(function(x, index) {
+                    if (x) {
+                      return <Movement
+                                key={index}
+                                movement_id={x}
+                                section_id={this.props.section_id}
+                              />
+                    } else {
+                      return null
+                    }
                     }, this)
 
     return (
       <div>
         {movements}
-        <button onClick={this.addMovementLocal}>Add Movement</button>
+        <button onClick={this.addMovement}>Add Movement</button>
       </div>
       )
   }

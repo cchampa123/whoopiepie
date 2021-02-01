@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class MovementClass(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, blank=True, unique=True)
     metric_type = models.CharField(choices = (('Reps', 'Reps'),
                                           ('Distance', 'Distance'),
                                           ('Calories', 'Calories')),
@@ -16,7 +16,9 @@ class MovementClass(models.Model):
         return self.name
 
 class Workout(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(blank=True, null=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+    scheduled_for = models.DateField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -34,8 +36,7 @@ class MovementInstance(models.Model):
     name = models.ForeignKey(MovementClass, on_delete=models.CASCADE)
     metric_type_value = models.PositiveIntegerField(blank=True)
     metric_value = models.PositiveIntegerField(blank=True)
-    date = models.DateTimeField(auto_now_add=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='movements')
 
     def __str__(self):
-        return str(self.date)+' '+self.name.name
+        return self.name.name

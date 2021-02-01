@@ -14,13 +14,21 @@ class MovementClassSerializer(serializers.ModelSerializer):
 class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workout
-        fields = '__all__'
+        fields = (
+            'id',
+            'start_time',
+            'end_time',
+            'scheduled_for',
+            'user',
+            'sections'
+        )
 
 class SectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Section
         fields = (
+            'id',
             'metric_type',
             'rounds',
             'time',

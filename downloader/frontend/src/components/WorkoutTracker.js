@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import WorkoutInterface from './workout/WorkoutInterface'
+import WorkoutManager from './workout/WorkoutManager'
 
 class WorkoutTracker extends React.Component {
 
@@ -8,7 +8,7 @@ class WorkoutTracker extends React.Component {
     return(
       <div>
       <h1> Workout Tracker </h1>
-      <WorkoutInterface token={this.props.token}/>
+      <WorkoutManager token={this.props.token}/>
       </div>
     )
   }

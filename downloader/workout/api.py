@@ -12,7 +12,9 @@ class WorkoutViewSet(viewsets.ModelViewSet):
     # ]
 
     def create(self, request):
-        serializer = WorkoutSerializer(data={'user':request.user.id})
+        data_dict = request.data
+        data_dict['user'] = request.user.id
+        serializer = WorkoutSerializer(data=data_dict)
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
