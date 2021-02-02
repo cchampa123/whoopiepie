@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Typeahead } from 'react-bootstrap-typeahead'
 import MovementAdder from './MovementAdder'
 
-class Movement extends React.Component {
+class Movement extends React.PureComponent {
 
   constructor(props) {
     super(props)

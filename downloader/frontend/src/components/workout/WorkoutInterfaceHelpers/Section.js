@@ -43,9 +43,11 @@ class Section extends React.Component {
 
   componentDidUpdate() {
     if (this.state.fetch_data) {
-      this.update_section_data().then(
-        this.setState({...this.state, fetch_data:false})
-      )
+      axios.patch('/api/workout/section/'+this.props.section_id+'/',
+      {
+        'movements':this.state.movements
+      }
+    )
     }
     if (this.state.update_section_data && this.state.rounds !== '') {
       axios.patch('/api/workout/section/'+String(this.props.section_id)+'/',
@@ -68,7 +70,7 @@ class Section extends React.Component {
         'name':1,
         'section':this.props.section_id
       }
-    ).then(this.setState({...this.state, fetch_data:true}))
+    ).then(res => {this.setState({...this.state, movements:this.state.movements.concat(res.data.id), fetch_data:true})})
   }
 
   handleChange(value, name) {
