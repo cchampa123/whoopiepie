@@ -25,6 +25,8 @@
     "react": "^16.13.1",
     "react-bootstrap-typeahead": "^5.1.4",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-simple-timefield": "^3.2.3",
+    "react-time-duration-input": "^1.1.1"
   }
 }
