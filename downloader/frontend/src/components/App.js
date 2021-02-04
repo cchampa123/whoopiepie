@@ -7,7 +7,8 @@ import Login from './Login';
 import Logout from './Logout';
 import YoutubeDownloader from './YoutubeDownloader';
 import WorkoutTracker from './WorkoutTracker'
-import Navbar from './Navbar'
+import Navbar from './common/Navbar'
+import Home from './Home'
 
 class App extends React.Component {
 
@@ -41,20 +42,26 @@ class App extends React.Component {
 
   render() {
     const nav = [
-      {id:1, link: '/logout', text: 'Log Out'},
-      {id:2, link: '/login', text: 'Log In'},
-      {id:3, link: '/workout', text: 'Workout Tracker'}
+      {link: '/youtube', text: 'Youtube Downloader'},
+      {link: '/workout', text: 'Workout Tracker'},
+      {link: '/logout', text: 'Log Out'}
     ]
     return (
-      <div>
+      <div id={'outer-container'}>
         <Router>
-        <h1>WhoopiePie</h1>
-        <Navbar list={nav} />
-          <div className="container">
+        {this.state.authenticated ? <Navbar link_list={nav} pageWrapID={'page-wrap'} outerContainerID={'outer-container'}/> : <div/>}
+          <div className="container" id={'page-wrap'}>
             <Switch>
               <PrivateRoute
                 exact
-                path="/"
+                path='/'
+                isAuthenticated={this.state.authenticated}
+                token={this.state.token}
+                comp={Home}
+              />
+              <PrivateRoute
+                exact
+                path="/youtube"
                 isAuthenticated={this.state.authenticated}
                 token={this.state.token}
                 comp={YoutubeDownloader}

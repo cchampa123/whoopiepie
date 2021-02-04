@@ -47,6 +47,7 @@ class Login extends React.Component {
     } else {
       return (
         <div>
+          <h1>WhoopiePie</h1>
           <form onSubmit={this.handleSubmit}>
             <div className="form-group">
               <label>Username</label>

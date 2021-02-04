@@ -1,15 +1,24 @@
 from rest_framework import permissions, status
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
+from datetime import datetime
 from .serializers import *
 from .models import *
 
 class WorkoutViewSet(viewsets.ModelViewSet):
     serializer_class=WorkoutSerializer
-    queryset = Workout.objects.all()
     # permission_classes = [
     #     permissions.IsAuthenticated
     # ]
+    filterset_fields = {
+        'start_time':['gte', 'lte', 'exact'],
+        'end_time':['gte', 'lte', 'exact'],
+        'scheduled_for':['gte', 'lte', 'exact', 'date']
+    }
+
+    def get_queryset(self):
+        user_queryset = Workout.objects.all() #filter(user=self.request.user.id)
+        return user_queryset
 
     def create(self, request):
         data_dict = request.data

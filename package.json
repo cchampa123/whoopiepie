@@ -21,12 +21,16 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "css-loader": "^5.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-bootstrap-typeahead": "^5.1.4",
+    "react-burger-menu": "^3.0.3",
+    "react-datepicker": "^3.4.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-simple-timefield": "^3.2.3",
-    "react-time-duration-input": "^1.1.1"
+    "react-time-duration-input": "^1.1.1",
+    "style-loader": "^2.0.0"
   }
 }
