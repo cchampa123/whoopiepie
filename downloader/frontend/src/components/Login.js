@@ -53,6 +53,7 @@ class Login extends React.Component {
               <label>Username</label>
               <div>
                 <input
+                  className='form-control'
                   type="text"
                   name="username"
                   onChange={this.handleChange}
@@ -64,6 +65,7 @@ class Login extends React.Component {
               <label>Password</label>
               <div>
                 <input
+                  className='form-control'
                   type="password"
                   name="password"
                   onChange={this.handleChange}
@@ -72,7 +74,7 @@ class Login extends React.Component {
               </div>
             </div>
             <div>
-              <button type="submit">Log In</button>
+              <button type="submit" className='btn btn-primary'>Log In</button>
             </div>
           </form>
           {this.state.invalid_credentials &&

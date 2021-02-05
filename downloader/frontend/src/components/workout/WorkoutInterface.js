@@ -68,16 +68,14 @@ class WorkoutInterface extends React.Component {
     }, this)
     return (
       <div>
-        <div className='form-group'>
-          <div>
-          <label>Scheduled For</label>
-          <DatePicker selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
-          </div>
+        <div className='input-group'>
+          <label className='control-label'>Scheduled For</label>
+          <DatePicker className='form-control form-control-sm' selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
         </div>
         {section_options}
         <div>
           {sections}
-          <button onClick={this.addSection}>Add Section</button>
+          <button className='btn btn-primary btn-sm' onClick={this.addSection}>Add Section</button>
         </div>
       </div>
     )

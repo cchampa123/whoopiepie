@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
 
 class MovementAdder extends React.Component {
 
@@ -31,28 +32,33 @@ class MovementAdder extends React.Component {
 
   render() {
     return (
-      <form  onSubmit={this.handleSubmit}>
-        <div className='form-group'>
-          <label>Metric Type</label>
-          <div>
-            <select name='newMovementMetricType' onChange={this.handleNewMovementChange} value={this.state.newMovementMetricType}>
-            <option value='Reps'>Reps</option>
-            <option value='Distance'>Distance</option>
-            <option value='Calories'>Calories</option>
-            </select>
+      <Modal show={true}>
+        <form  onSubmit={this.handleSubmit}>
+        <Modal.Header>Enter Movement Information</Modal.Header>
+        <Modal.Body>
+          <div className='form-group'>
+            <label>Metric Type</label>
+            <div>
+              <select name='newMovementMetricType' className='custom-select' onChange={this.handleNewMovementChange} value={this.state.newMovementMetricType}>
+              <option value='Reps'>Reps</option>
+              <option value='Distance'>Distance</option>
+              <option value='Calories'>Calories</option>
+              </select>
+            </div>
+            <label>Metric Value</label>
+            <div>
+              <select className='custom-select' name='newMovementMetric' onChange={this.handleNewMovementChange} value={this.state.newMovementMetric}>
+              <option value='Weight'>Weight</option>
+              <option value='Time'>Time</option>
+              </select>
+            </div>
           </div>
-          <label>Metric Value</label>
-          <div>
-            <select name='newMovementMetric' onChange={this.handleNewMovementChange} value={this.state.newMovementMetric}>
-            <option value='Weight'>Weight</option>
-            <option value='Time'>Time</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <button type='submit'>Add Movement</button>
-        </div>
-      </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-primary' type='submit'>Add Movement</button>
+        </Modal.Footer>
+        </form>
+      </Modal>
     )
   }
 }

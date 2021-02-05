@@ -109,13 +109,13 @@ class Movement extends React.PureComponent {
               size='sm'
               placeholder='Movement'/>
             <input
-              className='rbt-input-main'
+              className='form-control form-control-sm'
               type='text'
               name='metric_type_value'
               placeholder={this.state.movement_class_data.metric_type}
               onChange={(event) => this.changeMovementData(event)}/>
             <input
-              className='rbt-input-main'
+              className='form-control form-control-sm'
               type='text'
               name='metric_value'
               placeholder={this.state.movement_class_data.metric}

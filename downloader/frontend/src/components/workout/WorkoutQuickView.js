@@ -90,10 +90,10 @@ class Section extends React.Component {
     const movements = this.state.movements.map(x => <Movement key={x} movement_id={x}/>)
     const text = this.createText()
     return(
-      <div>
+      <li className='list-group-item'>
         <p>{text}</p>
         {movements}
-      </div>
+      </li>
     )
   }
 
@@ -127,8 +127,12 @@ class WorkoutQuickView extends React.Component {
   render () {
     const sections = this.state.sections.map(x => <Section key={x} section_id={x}/>)
     return(
-      <div className='border' onClick={this.props.onClick}>
-        {sections}
+      <div className='card mb-3' style={{maxWidth: '20rem'}} onClick={this.props.onClick}>
+        <div className='card-body'>
+          <ul className='list-group list-group-flush'>
+            {sections}
+          </ul>
+        </div>
       </div>
     )
   }

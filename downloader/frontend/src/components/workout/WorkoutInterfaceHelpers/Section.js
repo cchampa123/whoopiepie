@@ -95,28 +95,34 @@ class Section extends React.Component {
                     }, this)
 
     return (
-      <div className="border">
+      <div className="card">
+        <div className='card-header'>
         <form onSubmit={event => this.handleSubmit(event)}>
           <div className='input-group'>
-            <div>
-              <label>Type of Section</label>
-              <select name='metric_type' value={this.state.metric_type} onChange={event => this.handleChange(event.target.value, event.target.name)}>
+            <fieldset>
+            <label className='control-label'>Type of Section</label>
+              <select name='metric_type' className='custom-select custom-select-sm' value={this.state.metric_type} onChange={event => this.handleChange(event.target.value, event.target.name)}>
                 <option value='AMRAP'>AMRAP</option>
                 <option value='For Time'>For Time</option>
               </select>
-            </div>
-            <div>
-              <label>Rounds</label>
-              <input name='rounds' type='text' value={this.state.rounds} onChange={event => this.handleChange(event.target.value, event.target.name)}/>
-            </div>
-            <div>
-              <label>Time</label>
-              <TimeField name='time' style={{width: 170}} value={this.state.time} showSeconds='true' onChange={(event, value) => this.handleChange(value, 'time')}/>
-            </div>
+            </fieldset>
+            <fieldset>
+              <label className='control-label'>Rounds</label>
+              <input name='rounds' type='text' className='form-control form-control-sm' value={this.state.rounds} onChange={event => this.handleChange(event.target.value, event.target.name)}/>
+            </fieldset>
+            <fieldset>
+              <label className='control-label'>Time</label>
+              <TimeField name='time' className='form-control form-control-sm' style={{width: 170}} value={this.state.time} showSeconds='true' onChange={(event, value) => this.handleChange(value, 'time')}/>
+            </fieldset>
           </div>
         </form>
+        </div>
+        <div className='card-body'>
         {movements}
-        <button onClick={this.addMovement}>Add Movement</button>
+        </div>
+        <div className='card-footer'>
+        <button className='btn btn-secondary btn-sm' onClick={this.addMovement}>Add Movement</button>
+        </div>
       </div>
       )
   }

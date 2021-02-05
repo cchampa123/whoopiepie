@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal'
 
 class SectionAdder extends React.Component {
 
@@ -29,24 +30,33 @@ class SectionAdder extends React.Component {
 
   render() {
     return (
-      <form  onSubmit={this.handleSubmit}>
-        <div className='form-group'>
-          <label>Metric Type</label>
-          <div>
-            <select name='newSectionMetricType' onChange={this.handleNewSectionChange} value={this.state.newSectionMetricType}>
-            <option value='For Time'>For Time</option>
-            <option value='AMRAP'>AMRAP</option>
-            </select>
+      <Modal show={true}>
+      <form onSubmit={this.handleSubmit}>
+        <Modal.Header>
+              Enter Section Information
+        </Modal.Header>
+        <Modal.Body>
+          <div className='form-group'>
+            <label>Metric Type</label>
+            <div>
+              <select name='newSectionMetricType' className='custom-select' onChange={this.handleNewSectionChange} value={this.state.newSectionMetricType}>
+              <option value='For Time'>For Time</option>
+              <option value='AMRAP'>AMRAP</option>
+              </select>
+            </div>
           </div>
-          <label>Metric Value</label>
-          <div>
-            <input name='newSectionRounds' onChange={this.handleNewSectionChange} value={this.state.newSectionRounds}/>
+          <div className='form-group'>
+            <label>Metric Value</label>
+            <div>
+              <input name='newSectionRounds' className='form-control' onChange={this.handleNewSectionChange} value={this.state.newSectionRounds}/>
+            </div>
           </div>
-        </div>
-        <div>
-          <button type='submit'>Submit Section</button>
-        </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-primary' type='submit'>Submit Section</button>
+        </Modal.Footer>
       </form>
+    </Modal>
     )
   }
 }
