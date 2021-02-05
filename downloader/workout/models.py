@@ -18,7 +18,7 @@ class MovementClass(models.Model):
 class Workout(models.Model):
     start_time = models.DateTimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
-    scheduled_for = models.DateTimeField(blank=True, null=True)
+    scheduled_for = models.DateField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

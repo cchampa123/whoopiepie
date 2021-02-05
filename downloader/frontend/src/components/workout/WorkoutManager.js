@@ -20,7 +20,7 @@ class WorkoutManager extends React.Component {
   componentDidMount() {
     axios.get('/api/workout/workout',
       {params:{
-          'scheduled_for__date':getCurrentDate()
+          'scheduled_for':getCurrentDate()
       }}
     ).then(res=>this.setState({...this.state, scheduled_workouts:res.data.map(x => x.id)}))
   }

@@ -4,6 +4,7 @@ import Section from './WorkoutInterfaceHelpers/Section';
 import SectionAdder from './WorkoutInterfaceHelpers/SectionAdder';
 import MovementAdder from './WorkoutInterfaceHelpers/MovementAdder';
 import DatePicker from 'react-datepicker';
+import {nonTimestampDate} from '../common/getDate'
 import 'react-datepicker/dist/react-datepicker.css';
 
 class WorkoutInterface extends React.Component {
@@ -32,7 +33,7 @@ class WorkoutInterface extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     axios.patch('/api/workout/workout/'+String(this.props.workout_id)+'/',
       {
-        scheduled_for:this.state.scheduled_for
+        scheduled_for:nonTimestampDate(this.state.scheduled_for)
       }
       )
   }
@@ -70,7 +71,7 @@ class WorkoutInterface extends React.Component {
       <div>
         <div className='input-group'>
           <label className='control-label'>Scheduled For</label>
-          <DatePicker className='form-control form-control-sm' selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
+          <DatePicker disableClock={true} className='form-control form-control-sm' selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
         </div>
         {section_options}
         <div>

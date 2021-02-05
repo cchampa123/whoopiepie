@@ -13,7 +13,7 @@ class WorkoutViewSet(viewsets.ModelViewSet):
     filterset_fields = {
         'start_time':['gte', 'lte', 'exact'],
         'end_time':['gte', 'lte', 'exact'],
-        'scheduled_for':['gte', 'lte', 'exact', 'date']
+        'scheduled_for':['gte', 'lte', 'exact']
     }
 
     def get_queryset(self):
