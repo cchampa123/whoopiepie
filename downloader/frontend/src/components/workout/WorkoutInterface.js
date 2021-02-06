@@ -19,6 +19,7 @@ class WorkoutInterface extends React.Component {
     }
     this.addSection = this.addSection.bind(this)
     this.handleAddNewSection = this.handleAddNewSection.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   componentDidMount() {
@@ -33,7 +34,9 @@ class WorkoutInterface extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     axios.patch('/api/workout/workout/'+String(this.props.workout_id)+'/',
       {
-        scheduled_for:nonTimestampDate(this.state.scheduled_for)
+        scheduled_for:nonTimestampDate(this.state.scheduled_for),
+        start_time:this.state.start_time,
+        end_time:this.state.end_time
       }
       )
   }
@@ -48,6 +51,12 @@ class WorkoutInterface extends React.Component {
                     added_new_section:false,
                     sections:this.state.sections.concat(data.id)
                   })
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]:new Date()
+    })
   }
 
   render() {
@@ -67,16 +76,48 @@ class WorkoutInterface extends React.Component {
         />
       )
     }, this)
-    return (
+
+    const start_stop_button = this.state.start_time===null ?
       <div>
-        <div className='input-group'>
-          <label className='control-label'>Scheduled For</label>
+        <button
+          className='btn btn-success btn-sm'
+          name='start_time'
+          onClick={(event) => this.handleChange(event)}
+        >
+          Start Workout
+        </button>
+      </div>
+    :
+      <div>
+        <button
+          className='btn btn-danger btn-sm'
+          name='end_time'
+          onClick={(event) => this.handleChange(event)}
+        >
+          End Workout
+        </button>
+      </div>
+
+    const workout_options = (this.state.end_time !== null & this.state.start_time !== null) ?
+      <div className='btn btn-warning disabled'>
+        Workout completed on {this.state.end_time.toLocaleString()}
+      </div>
+    :
+      <div className='row'>
+        <div>
           <DatePicker disableClock={true} className='form-control form-control-sm' selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
         </div>
+        {start_stop_button}
+      </div>
+
+    return (
+      <div>
+        {workout_options}
         {section_options}
         <div>
           {sections}
-          <button className='btn btn-primary btn-sm' onClick={this.addSection}>Add Section</button>
+          <button className='btn btn-primary btn-block' onClick={this.addSection}>Add Section</button>
+          <button className='btn btn-block btn-info' onClick={this.props.reset_function}>Back to Workout Home</button>
         </div>
       </div>
     )

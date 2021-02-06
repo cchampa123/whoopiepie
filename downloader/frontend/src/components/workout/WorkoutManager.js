@@ -2,7 +2,7 @@ import React from 'react';
 import WorkoutInterface from './WorkoutInterface';
 import WorkoutQuickView from './WorkoutQuickView';
 import axios from 'axios';
-import getCurrentDate from '../common/getDate';
+import {getCurrentDate} from '../common/getDate';
 
 class WorkoutManager extends React.Component {
 
@@ -11,18 +11,44 @@ class WorkoutManager extends React.Component {
     this.state = {
       selected_workout:'',
       scheduled_workouts:[],
-      random_workouts:[]
+      random_workouts:[],
+      previous_workouts:[]
     }
     this.handleStartWorkout=this.handleStartWorkout.bind(this)
     this.loadWorkout=this.loadWorkout.bind(this)
+    this.resetWorkout=this.resetWorkout.bind(this)
   }
 
-  componentDidMount() {
-    axios.get('/api/workout/workout',
+  updateData() {
+    const scheduled = axios.get('/api/workout/workout/',
       {params:{
-          'scheduled_for':getCurrentDate()
+          'scheduled_for':getCurrentDate(),
+          'end_time__isnull':true
       }}
-    ).then(res=>this.setState({...this.state, scheduled_workouts:res.data.map(x => x.id)}))
+    )
+
+    const previous = axios.get('/api/workout/workout/',
+      {params:{
+        'order_by':'-end_time',
+        'end_time__isnull':false
+      }}
+    )
+    axios.all([scheduled, previous]).then(axios.spread((...responses) =>
+      this.setState({
+        ...this.state,
+        scheduled_workouts:responses[0].data.map(x => x.id),
+        previous_workouts:responses[1].data.map(x => x.id)
+      })
+    ))
+  }
+  componentDidMount() {
+    this.updateData()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.selected_workout !== prevState.selected_workout && this.state.selected_workout==='') {
+      this.updateData()
+    }
   }
 
   handleStartWorkout(event) {
@@ -55,12 +81,17 @@ class WorkoutManager extends React.Component {
     })
   }
 
+  resetWorkout() {
+    this.setState({...this.state, selected_workout:''})
+  }
+
   render() {
     if (this.state.selected_workout!=='') {
       return(
         <WorkoutInterface
           token={this.props.token}
           workout_id={this.state.selected_workout}
+          reset_function={this.resetWorkout}
         />
       )
     } else {
@@ -71,9 +102,18 @@ class WorkoutManager extends React.Component {
                 {this.state.scheduled_workouts.map(x => <WorkoutQuickView key={x} workout_id={x} onClick={() => this.loadWorkout(x)}/>)}
               </div>
             )
+
+      const previous_workout = this.state.previous_workouts.length===0 ? <div/> :
+            <div>
+              {this.state.previous_workouts.map(x => <WorkoutQuickView key={x} workout_id={x}/>)}
+            </div>
+
       return(
         <div>
         {scheduled_workout}
+        <div className='jumbotron'>
+          {previous_workout}
+        </div>
         <div style={{paddingTop:'15px'}}>
           <button className='btn btn-primary btn-sm' onClick={this.handleStartWorkout}>
             Plan New Workout

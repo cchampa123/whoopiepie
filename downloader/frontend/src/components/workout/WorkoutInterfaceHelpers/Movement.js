@@ -10,8 +10,8 @@ class Movement extends React.PureComponent {
     this.state = {
         movement_data:{
           id:-1,
-          metric_type_value:0,
-          metric_value:0,
+          metric_type_value:'',
+          metric_value:'',
           name:1,
           section:this.props.section_id
         },
@@ -112,12 +112,14 @@ class Movement extends React.PureComponent {
               className='form-control form-control-sm'
               type='text'
               name='metric_type_value'
+              value={this.state.movement_data.metric_type_value}
               placeholder={this.state.movement_class_data.metric_type}
               onChange={(event) => this.changeMovementData(event)}/>
             <input
               className='form-control form-control-sm'
               type='text'
               name='metric_value'
+              value={this.state.movement_data.metric_value}
               placeholder={this.state.movement_class_data.metric}
               onChange={(event) => this.changeMovementData(event)}/>
           </div>

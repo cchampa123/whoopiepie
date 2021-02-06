@@ -11,13 +11,16 @@ class WorkoutViewSet(viewsets.ModelViewSet):
     #     permissions.IsAuthenticated
     # ]
     filterset_fields = {
-        'start_time':['gte', 'lte', 'exact'],
-        'end_time':['gte', 'lte', 'exact'],
+        'start_time':['gte', 'lte', 'exact', 'isnull'],
+        'end_time':['gte', 'lte', 'exact', 'isnull'],
         'scheduled_for':['gte', 'lte', 'exact']
     }
 
     def get_queryset(self):
         user_queryset = Workout.objects.all() #filter(user=self.request.user.id)
+        order_by = self.request.query_params.get('order_by', None)
+        if order_by:
+            return user_queryset.order_by(order_by)
         return user_queryset
 
     def create(self, request):

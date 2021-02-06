@@ -69,6 +69,7 @@ class YoutubeDownloader extends React.Component {
     } else if (this.state.audio_video === "audio") {
       form_options = (
           <div>
+          <h1>YouTube Downloader</h1>
             <div className="form-group">
               <label>Artist</label>
               <div>
