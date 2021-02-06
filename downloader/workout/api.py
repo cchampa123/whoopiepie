@@ -7,9 +7,9 @@ from .models import *
 
 class WorkoutViewSet(viewsets.ModelViewSet):
     serializer_class=WorkoutSerializer
-    # permission_classes = [
-    #     permissions.IsAuthenticated
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
     filterset_fields = {
         'start_time':['gte', 'lte', 'exact', 'isnull'],
         'end_time':['gte', 'lte', 'exact', 'isnull'],
@@ -34,17 +34,20 @@ class WorkoutViewSet(viewsets.ModelViewSet):
 class MovementClassViewSet(viewsets.ModelViewSet):
     serializer_class=MovementClassSerializer
     queryset = MovementClass.objects.all()
-    # permission_classes = [
-    #     permissions.IsAuthenticated
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
 
 class MovementInstanceViewSet(viewsets.ModelViewSet):
     serializer_class=MovementInstanceSerializer
     queryset=MovementInstance.objects.all()
-    # permission_classes = [
-    #     permissions.IsAuthenticated
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
 
 class SectionViewSet(viewsets.ModelViewSet):
     serializer_class=SectionSerializer
     queryset=Section.objects.all()
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]

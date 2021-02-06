@@ -2,18 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { slide as Menu } from 'react-burger-menu';
 import './Navbar.css'
+import { useAuth } from './auth'
 
-class Navbar extends React.Component {
+function Navbar(props) {
+  const link_items = props.link_list.map(function(x, index) {return <Link key={index} className="menu-item" to={x.link}>{x.text}</Link>})
+  const setAuthTokens = useAuth()
 
-  render() {
-    const link_items = this.props.link_list.map(function(x, index) {return <Link key={index} className="menu-item" to={x.link}>{x.text}</Link>})
-    return (
-      <Menu right className='bm-menu'>
-        {link_items}
-      </Menu>
-    )
-  }
+  return (
+    <Menu right className='bm-menu'>
+      {link_items}
+      <a onClick={props.logout}>Log Out</a>
+    </Menu>
+  )
 }
+
 
 export default Navbar;
 //

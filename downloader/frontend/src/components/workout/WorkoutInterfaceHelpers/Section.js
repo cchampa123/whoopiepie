@@ -1,6 +1,6 @@
 import React from 'react';
 import Movement from './Movement';
-import axios from 'axios';
+import axios from '../../common/axiosConfig';
 import TimeField from 'react-simple-timefield'
 
 class Section extends React.Component {

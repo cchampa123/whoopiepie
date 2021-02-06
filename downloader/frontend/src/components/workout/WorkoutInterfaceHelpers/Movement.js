@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios from '../../common/axiosConfig';
 import { Typeahead } from 'react-bootstrap-typeahead'
 import MovementAdder from './MovementAdder'
 
@@ -32,13 +32,13 @@ class Movement extends React.PureComponent {
   updateMovementData() {
     const options_holder = axios.get('/api/workout/movement_class/')
     const movement_data_holder = axios.get('/api/workout/movement_instance/'+this.props.movement_id+'/')
-    axios.all([options_holder, movement_data_holder]).then(axios.spread((...responses) =>
+    Promise.all([options_holder, movement_data_holder]).then(responses =>
       this.setState({
           ...this.state,
           possible_options:responses[0].data.filter(x => x.id !== 1),
           movement_data:responses[1].data
         })
-      )).then(() => {
+      ).then(() => {
           axios.get('/api/workout/movement_class/'+this.state.movement_data.name+'/').then(res =>
             this.setState({...this.state, movement_class_data:res.data})
       )
@@ -50,9 +50,11 @@ class Movement extends React.PureComponent {
   }
 
   componentDidUpdate() {
+    if (this.state.movement_data.metric_type_value !== '' && this.state.movement_data.metric_value !== '') {
     axios.put('/api/workout/movement_instance/'+String(this.props.movement_id)+'/',
             this.state.movement_data
         )
+    }
   }
 
   changeSelectedMovement(selected) {

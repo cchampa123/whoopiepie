@@ -1,28 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
+import axios from './common/axiosConfig';
 import { Redirect } from 'react-router-dom';
+import { useAuth } from './common/auth'
 
-class Logout extends React.Component {
+function Logout() {
 
-  componentDidMount() {
-    axios.post('/api/auth/logout',
-      {},
-      {headers: {'Authorization': 'Token '+this.props.token}}
-    )
-    .then(res => {
-      this.props.handleLogout()
-      }
-    )
-  }
+  const setAuthTokens = useAuth()
 
-  render() {
-    return (
-      <div>
-        <h2>You have been logged out.</h2>
-      </div>
-    )
-  }
+  axios.post('/api/auth/logout')
+  setAuthTokens(null)
+
+  return (
+    <div>
+      <h2>You have been logged out.</h2>
+    </div>
+  )
 }
 
 

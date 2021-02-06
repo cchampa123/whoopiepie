@@ -1,5 +1,6 @@
 import React from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import axiosInstance from '../common/axiosConfig';
 
 class Movement extends React.Component {
 
@@ -19,20 +20,20 @@ class Movement extends React.Component {
         metric:''
       }
     }
-    const CancelToken = axios.CancelToken
-    this.cancelToken = CancelToken.source()
+    // const CancelToken = axios.CancelToken
+    // this.cancelToken = CancelToken.source()
   }
 
-  componentWillUnmount() {
-    this.cancelToken.cancel('Unmounted')
-  }
+  // componentWillUnmount() {
+  //   this.cancelToken.cancel('Unmounted')
+  // }
 
   componentDidMount() {
-    axios.get('/api/workout/movement_instance/'+String(this.props.movement_id)+'/', {cancelToken:this.cancelToken.token}
+    axiosInstance.get('/api/workout/movement_instance/'+String(this.props.movement_id)+'/'//, {cancelToken:this.cancelToken.token}
     ).then(resA =>
       Promise.all([
         resA,
-        axios.get('/api/workout/movement_class/'+String(resA.data.name)+'/')
+        axiosInstance.get('/api/workout/movement_class/'+String(resA.data.name)+'/')
       ])
     ).then(([resA, resB]) => {this.setState({
                                   movement_data:{
@@ -71,12 +72,13 @@ class Section extends React.Component {
       time:null,
       movements:[]
     }
-    const CancelToken = axios.CancelToken
-    this.cancelToken = CancelToken.source()
+    // const CancelToken = axios.CancelToken
+    // this.cancelToken = CancelToken.source()
   }
 
   componentDidMount() {
-    axios.get('/api/workout/section/'+String(this.props.section_id)+'/', {cancelToken:this.cancelToken.token}).then(
+    axiosInstance.get('/api/workout/section/'+String(this.props.section_id)+'/'//, {cancelToken:this.cancelToken.token}
+    ).then(
       res => {this.setState({
         id:res.data.id,
         metric_type:res.data.metric_type,
@@ -87,9 +89,9 @@ class Section extends React.Component {
     )
   }
 
-  componentWillUnmount() {
-    this.cancelToken.cancel('Unmounted')
-  }
+  // componentWillUnmount() {
+  //   this.cancelToken.cancel('Unmounted')
+  // }
 
   createText(){
     const round_or_rounds = this.state.rounds > 1 ? "rounds" : "round"
@@ -124,12 +126,13 @@ class WorkoutQuickView extends React.Component {
       scheduled_for:null,
       sections:[]
     }
-    const CancelToken = axios.CancelToken
-    this.cancelToken = CancelToken.source()
+    // const CancelToken = axios.CancelToken
+    // this.cancelToken = CancelToken.source()
   }
 
   componentDidMount() {
-    axios.get('/api/workout/workout/'+String(this.props.workout_id), {cancelToken:this.cancelToken.token}).then((res) => {
+    axiosInstance.get('/api/workout/workout/'+String(this.props.workout_id)+'/'//, {cancelToken:this.cancelToken.token}
+    ).then((res) => {
       this.setState({
         id:res.data.id,
         start_time:res.data.start_time,
@@ -140,9 +143,9 @@ class WorkoutQuickView extends React.Component {
     })
   }
 
-  componentWillUnmount() {
-    this.cancelToken.cancel('Unmounted')
-  }
+  // componentWillUnmount() {
+  //   this.cancelToken.cancel('Unmounted')
+  // }
 
   render () {
     const sections = this.state.sections.map(x => <Section key={x} section_id={x}/>)

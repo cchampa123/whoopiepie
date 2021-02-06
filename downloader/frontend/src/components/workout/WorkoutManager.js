@@ -1,7 +1,7 @@
 import React from 'react';
 import WorkoutInterface from './WorkoutInterface';
 import WorkoutQuickView from './WorkoutQuickView';
-import axios from 'axios';
+import axios from '../common/axiosConfig';
 import {getCurrentDate} from '../common/getDate';
 
 class WorkoutManager extends React.Component {
@@ -33,13 +33,14 @@ class WorkoutManager extends React.Component {
         'end_time__isnull':false
       }}
     )
-    axios.all([scheduled, previous]).then(axios.spread((...responses) =>
+
+    Promise.all([scheduled, previous]).then(responses =>
       this.setState({
         ...this.state,
         scheduled_workouts:responses[0].data.map(x => x.id),
         previous_workouts:responses[1].data.map(x => x.id)
       })
-    ))
+    )
   }
   componentDidMount() {
     this.updateData()
@@ -60,12 +61,6 @@ class WorkoutManager extends React.Component {
         'scheduled_for':null,
         'sections':[]
       },
-      {
-        headers:{
-          'Content-Type': 'application/json',
-          'Authorization':'Token '+this.props.token
-        }
-      }
     ).then(res => {
       this.setState({
         ...this.state,
@@ -89,7 +84,6 @@ class WorkoutManager extends React.Component {
     if (this.state.selected_workout!=='') {
       return(
         <WorkoutInterface
-          token={this.props.token}
           workout_id={this.state.selected_workout}
           reset_function={this.resetWorkout}
         />
