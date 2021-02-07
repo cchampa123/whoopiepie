@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class MovementClass(models.Model):
-    name = models.CharField(max_length=30, blank=True, unique=True)
+    name = models.CharField(max_length=100, blank=True, unique=True)
     metric_type = models.CharField(choices = (('Reps', 'Reps'),
                                           ('Distance', 'Distance'),
                                           ('Calories', 'Calories')),

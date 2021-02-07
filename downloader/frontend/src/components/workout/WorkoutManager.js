@@ -3,6 +3,9 @@ import WorkoutInterface from './WorkoutInterface';
 import WorkoutQuickView from './WorkoutQuickView';
 import axios from '../common/axiosConfig';
 import {getCurrentDate} from '../common/getDate';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import {nonTimestampDate} from '../common/getDate';
 
 class WorkoutManager extends React.Component {
 
@@ -11,6 +14,7 @@ class WorkoutManager extends React.Component {
     this.state = {
       selected_workout:'',
       scheduled_workouts:[],
+      scheduled_day_to_view:new Date(),
       random_workouts:[],
       previous_workouts:[]
     }
@@ -29,8 +33,7 @@ class WorkoutManager extends React.Component {
 
     const previous = axios.get('/api/workout/workout/',
       {params:{
-        'order_by':'-end_time',
-        'end_time__isnull':false
+        'scheduled_for':nonTimestampDate(this.state.scheduled_day_to_view)
       }}
     )
 
@@ -49,6 +52,14 @@ class WorkoutManager extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.selected_workout !== prevState.selected_workout && this.state.selected_workout==='') {
       this.updateData()
+    } else if (this.state.scheduled_day_to_view != prevState.scheduled_day_to_view) {
+      axios.get('/api/workout/workout/',
+        {params:{
+          'scheduled_for':nonTimestampDate(this.state.scheduled_day_to_view)
+        }}
+      ).then(res =>
+        this.setState({...this.state, previous_workouts:res.data.map(x=>x.id)})
+      )
     }
   }
 
@@ -99,13 +110,19 @@ class WorkoutManager extends React.Component {
 
       const previous_workout = this.state.previous_workouts.length===0 ? <div/> :
             <div>
-              {this.state.previous_workouts.map(x => <WorkoutQuickView key={x} workout_id={x}/>)}
+              {this.state.previous_workouts.map(x => <WorkoutQuickView key={x} workout_id={x} onClick={() => this.loadWorkout(x)}/>)}
             </div>
 
       return(
         <div>
         {scheduled_workout}
         <div className='jumbotron'>
+          <DatePicker
+            disableClock={true}
+            className='form-control form-control-sm'
+            selected={this.state.scheduled_day_to_view}
+            onChange={date => this.setState({...this.state, scheduled_day_to_view:date})}
+          />
           {previous_workout}
         </div>
         <div style={{paddingTop:'15px'}}>
