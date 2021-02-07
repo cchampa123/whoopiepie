@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from './common/axios';
+import axios from './common/axiosConfig';
 
 class YoutubeDownloader extends React.Component {
   constructor() {

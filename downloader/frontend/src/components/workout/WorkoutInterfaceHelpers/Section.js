@@ -114,6 +114,13 @@ class Section extends React.Component {
               <label className='control-label'>Time</label>
               <TimeField name='time' className='form-control form-control-sm' style={{width: 170}} value={this.state.time} showSeconds='true' onChange={(event, value) => this.handleChange(value, 'time')}/>
             </fieldset>
+            <fieldset>
+              <select name='section_type' className='custom-select custom-select-sm' value={this.state.section_type} onChange={event => ths.handleChange(event.target.value, event.target.name)}>
+                <option value="Strength">Strength</option>
+                <option value="MetCon">MetCon</option>
+                <option value="Conditioning">Conditioning</option>
+              </select>
+            </fieldset>
           </div>
         </form>
         </div>

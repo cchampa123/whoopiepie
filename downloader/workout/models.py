@@ -30,6 +30,10 @@ class Section(models.Model):
                                    max_length=20)
     rounds = models.PositiveIntegerField(default=1)
     time = models.DurationField(blank=True, null=True)
+    section_type = models.CharField(choices = (('Strength', 'Strength'),
+                                               ('MetCon', 'MetCon'),
+                                               ('Conditioning', 'Conditioning')),
+                                    max_length=20, default='Strength')
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE, related_name='sections')
 
 class MovementInstance(models.Model):
