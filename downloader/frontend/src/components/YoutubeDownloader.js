@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios from './common/axiosConfig';
 
 class YoutubeDownloader extends React.Component {
   constructor() {
@@ -39,12 +39,6 @@ class YoutubeDownloader extends React.Component {
         'season':this.state.season,
         'episode':this.state.episode,
         'audio_video':this.state.audio_video
-      },
-      {
-        headers:{
-          'Content-Type': 'application/json',
-          'Authorization':'Token '+this.props.token
-        }
       }
     )
     .then(response =>
@@ -69,6 +63,7 @@ class YoutubeDownloader extends React.Component {
     } else if (this.state.audio_video === "audio") {
       form_options = (
           <div>
+          <h1>YouTube Downloader</h1>
             <div className="form-group">
               <label>Artist</label>
               <div>

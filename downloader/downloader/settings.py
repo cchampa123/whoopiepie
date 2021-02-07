@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from .secret_settings import DJANGO_SECRET_KEY, HOST_IP, PLEX_ROOT_SETTING, DEBUG_SETTING
+from .secret_settings import DJANGO_SECRET_KEY, HOST_IP, PLEX_ROOT_SETTING, DEBUG_SETTING, POSTGRES_DB, PG_PW, PG_USER, PG_PORT, PG_HOST
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,11 +42,16 @@ INSTALLED_APPS = [
     'youtube_downloader',
     'rest_framework',
     'frontend',
+    'workout',
     'knox',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #'PAGE_SIZE': 5,
 }
 
 MIDDLEWARE = [
@@ -85,8 +90,12 @@ WSGI_APPLICATION = 'downloader.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': POSTGRES_DB,
+        'USER': PG_USER,
+        'PASSWORD': PG_PW,
+        'HOST': PG_HOST,
+        'PORT': PG_PORT
     }
 }
 

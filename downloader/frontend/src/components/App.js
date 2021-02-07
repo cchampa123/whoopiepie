@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from "react-router-dom";
 
@@ -6,71 +6,60 @@ import PrivateRoute from './common/PrivateRoute'
 import Login from './Login';
 import Logout from './Logout';
 import YoutubeDownloader from './YoutubeDownloader';
-import Navbar from './Navbar'
+import WorkoutTracker from './WorkoutTracker'
+import Navbar from './common/Navbar'
+import Home from './Home'
+import { AuthContext } from './common/auth.js'
 
-class App extends React.Component {
 
-  constructor() {
-    super()
-    this.state = {
-      authenticated: false,
-      token: null,
-      user: null
-    }
-    this.handleLogin = this.handleLogin.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
+
+function App(props){
+  console.log(localStorage.getItem('tokens'))
+  const existingTokens=localStorage.getItem('tokens')
+  const [authTokens, setAuthTokens] = useState(existingTokens)
+
+  const setTokens = (data) => {
+    localStorage.setItem('tokens', data);
+    setAuthTokens(data)
   }
 
-  handleLogin(loginInfo) {
-    this.setState({
-      token:loginInfo.token,
-      user: loginInfo.user,
-      authenticated: true,
-      }
-    )
-  }
-
-  handleLogout() {
-    this.setState({
-      authenticated: false,
-      token:null,
-      user:null
-    })
-}
-
-  render() {
-    const nav = [
-      {id:1, link: '/logout', text: 'Log Out'},
-      {id:2, link: '/login', text: 'Log In'}
-    ]
-    return (
-      <div>
-        <Router>
-        <h1>WhoopiePie</h1>
-        <Navbar list={nav} />
-          <div className="container">
-            <Switch>
-              <PrivateRoute
-                exact
-                path="/"
-                isAuthenticated={this.state.authenticated}
-                token={this.state.token}
-                comp={YoutubeDownloader}
-              />
-              <Route
-                exact path='/login'
-                render={() => <Login handleLogin={this.handleLogin} authenticated={this.state.authenticated}/>}
-              />
-              <Route
-                exact path='/logout'
-                render={() => <Logout handleLogout={this.handleLogout} token={this.state.token}/>}
-              />
-            </Switch>
-          </div>
-        </Router>
-      </div>
-    )
-  }
+  const nav = [
+    {link: '/youtube', text: 'Youtube Downloader'},
+    {link: '/workout', text: 'Workout Tracker'}
+    //{link: '/logout', text: 'Log Out'}
+  ]
+  return (
+    <AuthContext.Provider value={{ authTokens, setAuthTokens:setTokens }}>
+    <div id={'outer-container'}>
+      <Router>
+        {authTokens ? <Navbar logout={() => setTokens()} link_list={nav} pageWrapID={'page-wrap'} outerContainerID={'outer-container'}/> : <div/>}
+        <div className="container" id={'page-wrap'}>
+          <Switch>
+            <PrivateRoute
+              exact
+              path='/'
+              comp={Home}
+            />
+            <PrivateRoute
+              exact
+              path="/youtube"
+              comp={YoutubeDownloader}
+            />
+            <PrivateRoute
+              exact
+              path="/workout"
+              comp={WorkoutTracker}
+            />
+            <Route
+              exact path='/login'
+              render={() => <Login/>}
+            />
+          </Switch>
+        </div>
+      </Router>
+    </div>
+    </AuthContext.Provider>
+  )
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))

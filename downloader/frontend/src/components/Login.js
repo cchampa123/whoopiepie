@@ -1,85 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import { useAuth } from './common/auth'
 
-class Login extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      username:"",
-      password:"",
-      invalid_credentials:false
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+function Login() {
+
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const { setAuthTokens } = useAuth();
+
+  function postLogin() {
+    axios.post('/api/auth/login',
+    {
+      'username':userName,
+      'password':password
+    }).then(result => {
+      console.log('hello')
+      setAuthTokens(result.data.token);
+      setLoggedIn(true);
+    }).catch(e => {
+      setIsError(true);
+    });
   }
 
-  handleChange(event) {
-    this.setState({
-      ...this.state,
-      [event.target.name]: event.target.value
-    })
+  if (isLoggedIn) {
+    return <Redirect to='/'/>
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
-    axios.post('/api/auth/login', this.state)
-    .then(res => {
-      this.props.handleLogin(res.data)
-      }
-    )
-    .catch(error => {
-      this.setState({
-        username:"",
-        password:"",
-        invalid_credentials:true
-      })
-    }
-    )
-  }
-
-  render() {
-    if (this.props.authenticated) {
-      return (
-        <Redirect to='/' />
-      )
-    } else {
-      return (
-        <div>
-          <form onSubmit={this.handleSubmit}>
-            <div className="form-group">
-              <label>Username</label>
-              <div>
-                <input
-                  type="text"
-                  name="username"
-                  onChange={this.handleChange}
-                  value={this.state.username}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <div>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                />
-              </div>
-            </div>
-            <div>
-              <button type="submit">Log In</button>
-            </div>
-          </form>
-          {this.state.invalid_credentials &&
-            <div className="alert alert-danger">Invalid Credentials</div>}
+  return (
+    <div>
+      <h1>WhoopiePie</h1>
+        <div className="form-group">
+          <label>Username</label>
+          <div>
+            <input
+              className='form-control'
+              type="text"
+              name="username"
+              onChange={e => {setUserName(e.target.value)}}
+              value={userName}
+            />
+          </div>
         </div>
-      )
-    }
-  }
+        <div className="form-group">
+          <label>Password</label>
+          <div>
+            <input
+              className='form-control'
+              type="password"
+              name="password"
+              onChange={e => {setPassword(e.target.value)}}
+              value={password}
+            />
+          </div>
+        </div>
+        <div>
+          <button className='btn btn-primary' onClick={postLogin}>Log In</button>
+        </div>
+    </div>
+  )
 }
+
 
 export default Login;
