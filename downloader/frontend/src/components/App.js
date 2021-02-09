@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from "react-router-dom";
+import axios from "axios";
 
 import PrivateRoute from './common/PrivateRoute'
 import Login from './Login';
@@ -14,7 +15,6 @@ import { AuthContext } from './common/auth.js'
 
 
 function App(props){
-  console.log(localStorage.getItem('tokens'))
   const existingTokens=localStorage.getItem('tokens')
   const [authTokens, setAuthTokens] = useState(existingTokens)
 
@@ -22,6 +22,25 @@ function App(props){
     localStorage.setItem('tokens', data);
     setAuthTokens(data)
   }
+
+  axios.interceptors.request.use(function(config) {
+      if (authTokens) {
+        const token = "Token "+authTokens;
+        config.headers.Authorization = token;
+      }
+      return config;
+    }
+  )
+
+  axios.interceptors.response.use((response) => {
+    return response
+  }, function(error) {
+    const originalRequest = error.config;
+    if (error.response.status===401) {
+      localStorage.setItem('tokens', '')
+      window.location.reload(false)
+    }
+  })
 
   const nav = [
     {link: '/youtube', text: 'Youtube Downloader'},
@@ -32,7 +51,7 @@ function App(props){
     <AuthContext.Provider value={{ authTokens, setAuthTokens:setTokens }}>
     <div id={'outer-container'}>
       <Router>
-        {authTokens ? <Navbar logout={() => setTokens()} link_list={nav} pageWrapID={'page-wrap'} outerContainerID={'outer-container'}/> : <div/>}
+        {authTokens && authTokens !== 'undefined' ? <Navbar logout={() => setTokens('')} link_list={nav} pageWrapID={'page-wrap'} outerContainerID={'outer-container'}/> : <div/>}
         <div className="container" id={'page-wrap'}>
           <Switch>
             <PrivateRoute

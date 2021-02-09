@@ -9,4 +9,13 @@ axiosInstance.interceptors.request.use(function(config) {
   }
 )
 
+axiosInstance.interceptors.response.use((response) => {
+  return response
+}, function(error) {
+  const originalRequest = error.config;
+  if (error.response.status===401) {
+    localStorage.setItem('tokens', null)
+  }
+})
+
 export default axiosInstance;

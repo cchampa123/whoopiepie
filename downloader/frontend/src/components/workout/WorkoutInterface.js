@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from '../common/axiosConfig';
+import axios from 'axios';
 import Section from './WorkoutInterfaceHelpers/Section';
 import SectionAdder from './WorkoutInterfaceHelpers/SectionAdder';
 import MovementAdder from './WorkoutInterfaceHelpers/MovementAdder';

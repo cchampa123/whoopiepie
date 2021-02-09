@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from '../../common/axiosConfig';
+import axios from 'axios';
 import Modal from 'react-bootstrap/Modal'
 
 class SectionAdder extends React.Component {
