@@ -38,8 +38,8 @@ class Section(models.Model):
 
 class MovementInstance(models.Model):
     name = models.ForeignKey(MovementClass, on_delete=models.CASCADE)
-    metric_type_value = models.PositiveIntegerField(blank=True)
-    metric_value = models.PositiveIntegerField(blank=True)
+    metric_type_value = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
+    metric_value = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='movements')
 
     def __str__(self):

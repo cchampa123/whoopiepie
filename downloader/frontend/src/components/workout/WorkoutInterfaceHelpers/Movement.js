@@ -22,6 +22,7 @@ class Movement extends React.PureComponent {
           name:''
         },
         possible_options:[],
+        duplicate:1,
         added_new_movement:false,
         new_movement_name:''
       }

@@ -45,13 +45,23 @@ function App(props){
   const nav = [
     {link: '/youtube', text: 'Youtube Downloader'},
     {link: '/workout', text: 'Workout Tracker'}
-    //{link: '/logout', text: 'Log Out'}
   ]
   return (
     <AuthContext.Provider value={{ authTokens, setAuthTokens:setTokens }}>
     <div id={'outer-container'}>
       <Router>
-        {authTokens && authTokens !== 'undefined' ? <Navbar logout={() => setTokens('')} link_list={nav} pageWrapID={'page-wrap'} outerContainerID={'outer-container'}/> : <div/>}
+        {authTokens && authTokens !== 'undefined' ?
+            <Navbar
+                logout={() => {
+                  setTokens('');
+                  window.location.reload(false);
+                  }}
+                link_list={nav}
+                pageWrapID={'page-wrap'}
+                outerContainerID={'outer-container'}
+              /> :
+              <div/>
+            }
         <div className="container" id={'page-wrap'}>
           <Switch>
             <PrivateRoute

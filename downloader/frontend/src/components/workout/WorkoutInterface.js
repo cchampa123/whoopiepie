@@ -1,8 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Section from './WorkoutInterfaceHelpers/Section';
-import SectionAdder from './WorkoutInterfaceHelpers/SectionAdder';
-import MovementAdder from './WorkoutInterfaceHelpers/MovementAdder';
+import WorkoutSharer from './WorkoutInterfaceHelpers/WorkoutSharer'
 import DatePicker from 'react-datepicker';
 import {nonTimestampDate} from '../common/getDate'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -14,8 +13,7 @@ class WorkoutInterface extends React.Component {
       sections:[],
       start_time:null,
       end_time:null,
-      scheduled_for:new Date(),
-      added_new_section:false
+      scheduled_for:new Date()
     }
     this.addSection = this.addSection.bind(this)
     this.handleAddNewSection = this.handleAddNewSection.bind(this)
@@ -42,7 +40,14 @@ class WorkoutInterface extends React.Component {
   }
 
   addSection() {
-    this.setState({...this.state, added_new_section:true})
+    axios.post('/api/workout/section/',
+    {
+      'metric_type':'For Time',
+      'rounds':1,
+      'workout':this.props.workout_id,
+      'time':'00:00:00',
+      'movements':[]
+    }).then(res => this.setState({...this.state, sections:this.state.sections.concat(res.data.id)}))
   }
 
   handleAddNewSection(data) {
@@ -60,13 +65,6 @@ class WorkoutInterface extends React.Component {
   }
 
   render() {
-    const section_options = this.state.added_new_section===true ?
-                              <SectionAdder
-                                workout_id={this.props.workout_id}
-                                completion={this.handleAddNewSection}
-                                /> :
-                                <div/>
-
     const sections = this.state.sections.map(function(section, index) {
       return (
         <Section
@@ -108,12 +106,12 @@ class WorkoutInterface extends React.Component {
           <DatePicker disableClock={true} className='form-control form-control-sm' selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
         </div>
         {start_stop_button}
+        <WorkoutSharer workout_id={this.props.workout_id}/>
       </div>
 
     return (
       <div>
         {workout_options}
-        {section_options}
         <div>
           {sections}
           <button className='btn btn-primary btn-block' onClick={this.addSection}>Add Section</button>
