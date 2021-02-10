@@ -1,7 +1,7 @@
 import React from 'react';
 import WorkoutInterface from './WorkoutInterface';
 import WorkoutQuickView from './WorkoutQuickView';
-import axios from '../common/axiosConfig';
+import axios from 'axios';
 import {getCurrentDate} from '../common/getDate';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

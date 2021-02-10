@@ -1,7 +1,8 @@
 import React from 'react';
 import Movement from './Movement';
-import axios from '../../common/axiosConfig';
+import axios from 'axios';
 import TimeField from 'react-simple-timefield'
+import SectionAdder from './SectionAdder'
 
 class Section extends React.Component {
 
@@ -9,57 +10,41 @@ class Section extends React.Component {
     super()
     this.state = {
       id:-1,
-      metric_type:'',
-      rounds:'',
+      metric_type:"For Time",
+      rounds:1,
       time:'00:00:00',
       workout:'',
       movements:[],
-      added_movement:false,
-      fetch_data:false,
-      update_section_data:false
+      show_editor:false
     }
     this.addMovement = this.addMovement.bind(this)
-    this.update_section_data = this.update_section_data.bind(this)
-  }
-
-  update_section_data() {
-    return (
-      axios.get('/api/workout/section/'+this.props.section_id+'/').then(res => {
-        this.setState({
-          id:res.data.id,
-          metric_type:res.data.metric_type,
-          rounds:res.data.rounds,
-          time:res.data.time,
-          workout:res.data.workout,
-          movements:res.data.movements
-        })
-      })
-    )
+    this.updateSectionInfo = this.updateSectionInfo.bind(this)
   }
 
   componentDidMount() {
-    this.update_section_data()
+    axios.get('/api/workout/section/'+this.props.section_id+'/').then(res => {
+      this.setState({
+        id:res.data.id,
+        metric_type:res.data.metric_type,
+        rounds:res.data.rounds,
+        time:res.data.time,
+        workout:res.data.workout,
+        movements:res.data.movements
+      })
+    })
   }
 
   componentDidUpdate() {
-    if (this.state.fetch_data) {
-      axios.patch('/api/workout/section/'+this.props.section_id+'/',
-      {
-        'movements':this.state.movements
-      }
+    axios.put('/api/workout/section/'+this.props.section_id+'/',
+    {
+      id:this.state.id,
+      metric_type:this.state.metric_type,
+      rounds:this.state.rounds,
+      time:this.state.time,
+      workout:this.state.workout,
+      movements:this.state.movements
+    }
     )
-    }
-    if (this.state.update_section_data && this.state.rounds !== '') {
-      axios.patch('/api/workout/section/'+String(this.props.section_id)+'/',
-          {
-            'metric_type':this.state.metric_type,
-            'rounds':this.state.rounds,
-            'time':this.state.time
-          }
-      ).then(
-        this.setState({...this.state, update_section_data:false})
-      )
-    }
   }
 
   addMovement () {
@@ -70,14 +55,35 @@ class Section extends React.Component {
         'name':1,
         'section':this.props.section_id
       }
-    ).then(res => {this.setState({...this.state, movements:this.state.movements.concat(res.data.id), fetch_data:true})})
+    ).then(res => {this.setState({
+            ...this.state,
+            movements:this.state.movements.concat(res.data.id)}
+          )})
   }
 
   handleChange(value, name) {
     this.setState({
       ...this.state,
       [name]:value,
-      update_section_data:true
+    })
+  }
+
+  createText(){
+    const round_or_rounds = this.state.rounds > 1 ? "rounds" : "round"
+    if (this.state.metric_type === 'AMRAP'){
+      return "AMRAP "+this.state.time+" - "+this.state.rounds+' '+round_or_rounds+":"
+    } else {
+      return this.state.rounds+' '+round_or_rounds+' for time:'
+    }
+  }
+
+  updateSectionInfo(data) {
+    this.setState({
+      ...this.state,
+      metric_type:data.metric_type,
+      rounds:data.rounds,
+      time:data.time,
+      workout:data.workout,
     })
   }
 
@@ -96,34 +102,17 @@ class Section extends React.Component {
 
     return (
       <div className="card">
+        {this.state.show_editor ?
+        <SectionAdder
+          data={this.state}
+          updateSectionInfo={this.updateSectionInfo}
+          finishEditing={() => this.handleChange(false, 'show_editor')}
+        /> :
+        <div/>
+        }
         <div className='card-header'>
-        <form onSubmit={event => this.handleSubmit(event)}>
-          <div className='input-group'>
-            <fieldset>
-            <label className='control-label'>Type of Section</label>
-              <select name='metric_type' className='custom-select custom-select-sm' value={this.state.metric_type} onChange={event => this.handleChange(event.target.value, event.target.name)}>
-                <option value='AMRAP'>AMRAP</option>
-                <option value='For Time'>For Time</option>
-              </select>
-            </fieldset>
-            <fieldset>
-              <label className='control-label'>Rounds</label>
-              <input name='rounds' type='text' className='form-control form-control-sm' value={this.state.rounds} onChange={event => this.handleChange(event.target.value, event.target.name)}/>
-            </fieldset>
-            <fieldset>
-              <label className='control-label'>Time</label>
-              <TimeField name='time' className='form-control form-control-sm' style={{width: 170}} value={this.state.time} showSeconds='true' onChange={(event, value) => this.handleChange(value, 'time')}/>
-            </fieldset>
-            <fieldset>
-              <label className='control-label'>Section Type</label>
-              <select name='section_type' className='custom-select custom-select-sm' value={this.state.section_type} onChange={event => this.handleChange(event.target.value, event.target.name)}>
-                <option value="Strength">Strength</option>
-                <option value="MetCon">MetCon</option>
-                <option value="Conditioning">Conditioning</option>
-              </select>
-            </fieldset>
-          </div>
-        </form>
+          <h4>{this.createText()}</h4>
+          <button className='btn btn-warning btn-sm' onClick={() => this.handleChange(true, 'show_editor')}>Edit Information</button>
         </div>
         <div className='card-body'>
         {movements}

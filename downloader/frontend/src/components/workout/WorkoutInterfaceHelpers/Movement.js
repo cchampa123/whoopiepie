@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from '../../common/axiosConfig';
+import axios from 'axios';
 import { Typeahead } from 'react-bootstrap-typeahead'
 import MovementAdder from './MovementAdder'
 
@@ -22,6 +22,7 @@ class Movement extends React.PureComponent {
           name:''
         },
         possible_options:[],
+        duplicate:1,
         added_new_movement:false,
         new_movement_name:''
       }

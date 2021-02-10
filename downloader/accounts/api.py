@@ -1,7 +1,9 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.mixins import ListModelMixin
 from knox.models import AuthToken
 from .serializers import UserSerializer, LoginSerializer
+from django.contrib.auth.models import User
 
 # Login api
 class LoginAPI(generics.GenericAPIView):
@@ -17,11 +19,10 @@ class LoginAPI(generics.GenericAPIView):
         })
 
 # Get user api
-class UserAPI(generics.RetrieveAPIView):
+class UserAPI(generics.ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
     serializer_class = UserSerializer
 
-    def get_object(self):
-        return self.request.user
+    queryset = User.objects.all()

@@ -1,6 +1,6 @@
 import React from 'react';
 //import axios from 'axios';
-import axiosInstance from '../common/axiosConfig';
+import axiosInstance from 'axios';
 
 class Movement extends React.Component {
 
