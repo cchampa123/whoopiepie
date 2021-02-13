@@ -6,7 +6,6 @@ class WorkoutTracker extends React.Component {
   render() {
     return(
       <div>
-      <h1> Workout Tracker </h1>
       <WorkoutManager/>
       </div>
     )

@@ -44,7 +44,8 @@ function App(props){
 
   const nav = [
     {link: '/youtube', text: 'Youtube Downloader'},
-    {link: '/workout', text: 'Workout Tracker'}
+    {link: '/workout', text: 'Workout Tracker'},
+    {link: '/', text:'WhoopiePie'}
   ]
   return (
     <AuthContext.Provider value={{ authTokens, setAuthTokens:setTokens }}>
@@ -62,7 +63,7 @@ function App(props){
               /> :
               <div/>
             }
-        <div className="container" id={'page-wrap'}>
+        <div className="container" style={{paddingTop:'60px'}} id={'page-wrap'}>
           <Switch>
             <PrivateRoute
               exact

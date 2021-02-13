@@ -4,16 +4,46 @@ import { slide as Menu } from 'react-burger-menu';
 import './Navbar.css'
 import { useAuth } from './auth'
 
-function Navbar(props) {
-  const link_items = props.link_list.map(function(x, index) {return <Link key={index} className="menu-item" to={x.link}>{x.text}</Link>})
-  const setAuthTokens = useAuth()
+class Navbar extends React.Component {
 
-  return (
-    <Menu right className='bm-menu'>
-      {link_items}
-      <a onClick={props.logout}>Log Out</a>
-    </Menu>
-  )
+  constructor() {
+    super()
+    this.state = {
+      selected:'WhoopiePie'
+    }
+    this.changeSelected = this.changeSelected.bind(this)
+  }
+
+  changeSelected(event) {
+    this.setState({selected:event.target.name})
+  }
+
+  render() {
+    const link_items = this.props.link_list.map(
+      function(x, index) {
+        return (
+                    <Link
+                      key={index}
+                      name={x.text}
+                      onClick={this.changeSelected}
+                      className="btn btn-secondary"
+                      to={x.link}
+                    >
+                    {x.text}
+                    </Link>
+                  )
+                }, this
+    )
+    return (
+      <nav className='navbar navbar-dark bg-primary fixed-top'>
+      <h1>{this.state.selected}</h1>
+      <Menu right className='bm-menu'>
+        {link_items}
+        <a onClick={this.props.logout} className='btn btn-secondary'>Log Out</a>
+      </Menu>
+      </nav>
+    )
+  }
 }
 
 
