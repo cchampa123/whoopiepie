@@ -61,7 +61,7 @@ class Movement extends React.Component {
   }
 }
 
-class Section extends React.Component {
+export class Section extends React.Component {
 
   constructor() {
     super()
