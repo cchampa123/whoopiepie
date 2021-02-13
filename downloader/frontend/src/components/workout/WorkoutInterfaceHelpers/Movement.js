@@ -74,7 +74,7 @@ class Movement extends React.PureComponent {
 
   completeAddNewMovement() {
     this.updateMovementData()
-    this.setState(prevstate => ({...prevState, added_new_movement:false, new_movement_name:''}))
+    this.setState(prevState => ({...prevState, added_new_movement:false, new_movement_name:''}))
   }
 
   changeMovementData(event) {
