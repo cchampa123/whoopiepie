@@ -1,6 +1,7 @@
 from rest_framework import permissions, status
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
+from django.db.models import Prefetch
 from datetime import datetime
 from .serializers import *
 from .models import *
@@ -45,7 +46,7 @@ class WorkoutViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
     def get_queryset(self):
-        user_queryset = Workout.objects.filter(user=self.request.user.id)
+        user_queryset = Workout.objects.filter(user=self.request.user.id).order_by('id')
         order_by = self.request.query_params.get('order_by', None)
         if order_by:
             return user_queryset.order_by(order_by)
@@ -68,14 +69,17 @@ class MovementClassViewSet(viewsets.ModelViewSet):
 
 class MovementInstanceViewSet(viewsets.ModelViewSet):
     serializer_class=MovementInstanceSerializer
-    queryset=MovementInstance.objects.all()
+    queryset=MovementInstance.objects.all().order_by('id')
     permission_classes = [
         permissions.IsAuthenticated
     ]
 
 class SectionViewSet(viewsets.ModelViewSet):
     serializer_class=SectionSerializer
-    queryset=Section.objects.all()
+    queryset=Section.objects.prefetch_related(Prefetch(
+        'movements',
+        queryset=MovementInstance.objects.order_by('id')
+    )).order_by('id')
     permission_classes = [
         permissions.IsAuthenticated
     ]

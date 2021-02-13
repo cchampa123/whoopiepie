@@ -33,5 +33,6 @@ class SectionSerializer(serializers.ModelSerializer):
             'rounds',
             'time',
             'workout',
-            'movements'
+            'movements',
+            'section_type'
             )
