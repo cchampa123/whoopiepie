@@ -34,14 +34,14 @@ class Movement extends React.PureComponent {
     const options_holder = axios.get('/api/workout/movement_class/')
     const movement_data_holder = axios.get('/api/workout/movement_instance/'+this.props.movement_id+'/')
     Promise.all([options_holder, movement_data_holder]).then(responses =>
-      this.setState({
-          ...this.state,
+      this.setState(prevState => ({
+          ...prevState,
           possible_options:responses[0].data.filter(x => x.id !== 1),
           movement_data:responses[1].data
-        })
+        }))
       ).then(() => {
           axios.get('/api/workout/movement_class/'+this.state.movement_data.name+'/').then(res =>
-            this.setState({...this.state, movement_class_data:res.data})
+            this.setState(prevState => ({...prevState, movement_class_data:res.data}))
       )
     })
   }
@@ -59,11 +59,10 @@ class Movement extends React.PureComponent {
   }
 
   changeSelectedMovement(selected) {
-    console.log(selected)
     if (selected.length > 0 && 'customOption' in selected[0]) {
-      this.setState({...this.state,
+      this.setState(prevState => ({...prevState,
                       added_new_movement:true,
-                      new_movement_name:selected[0].name})
+                      new_movement_name:selected[0].name}))
     } else if (selected.length > 0) {
       axios.patch('/api/workout/movement_instance/'+this.props.movement_id+'/',
                 {
@@ -75,17 +74,18 @@ class Movement extends React.PureComponent {
 
   completeAddNewMovement() {
     this.updateMovementData()
-    this.setState({...this.state, added_new_movement:false, new_movement_name:''})
+    this.setState(prevstate => ({...prevState, added_new_movement:false, new_movement_name:''}))
   }
 
   changeMovementData(event) {
-    this.setState({
-      ...this.state,
+    event.persist()
+    this.setState(prevState => ({
+      ...prevState,
       movement_data:{
-        ...this.state.movement_data,
+        ...prevState.movement_data,
         [event.target.name]:event.target.value
       }
-    })
+    }))
   }
 
   render() {
@@ -100,6 +100,13 @@ class Movement extends React.PureComponent {
     } else {
       return (
           <div className='input-group'>
+          {this.props.editing_movements &&
+            <input
+              className='form-check-input'
+              type='checkbox'
+              checked={this.props.checked}
+              onChange={this.props.onChangeCallback}
+            />}
             <Typeahead
               allowNew
               newSelectionPrefix='Add a new movement: '
@@ -107,7 +114,7 @@ class Movement extends React.PureComponent {
               options={this.state.possible_options}
               id='movementTypeahead'
               onChange={(selected) => this.changeSelectedMovement(selected)}
-              onInputChange={(value) => this.setState({...this.state, movement_class_data:{...this.state.movement_class_data, name:value}})}
+              onInputChange={(value) => this.setState(prevState => ({...prevState, movement_class_data:{...this.state.movement_class_data, name:value}}))}
               selected={[this.state.movement_class_data]}
               size='sm'
               placeholder='Movement'/>

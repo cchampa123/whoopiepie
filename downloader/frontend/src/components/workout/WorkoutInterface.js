@@ -5,6 +5,7 @@ import WorkoutSharer from './WorkoutInterfaceHelpers/WorkoutSharer'
 import DatePicker from 'react-datepicker';
 import {nonTimestampDate} from '../common/getDate'
 import 'react-datepicker/dist/react-datepicker.css';
+import Deleter from './WorkoutInterfaceHelpers/Deleter'
 
 class WorkoutInterface extends React.Component {
   constructor() {
@@ -18,6 +19,7 @@ class WorkoutInterface extends React.Component {
     this.addSection = this.addSection.bind(this)
     this.handleAddNewSection = this.handleAddNewSection.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.removeSection = this.removeSection.bind(this)
   }
 
   componentDidMount() {
@@ -37,6 +39,13 @@ class WorkoutInterface extends React.Component {
         end_time:this.state.end_time
       }
       )
+  }
+
+  removeSection(section_id) {
+    this.setState({
+      ...this.state,
+      sections:this.state.sections.filter(x=>x!==section_id)
+    })
   }
 
   addSection() {
@@ -71,6 +80,7 @@ class WorkoutInterface extends React.Component {
           key={index}
           section_id={section}
           workout_id={this.props.workout_id}
+          section_remover={this.removeSection}
         />
       )
     }, this)
@@ -97,8 +107,17 @@ class WorkoutInterface extends React.Component {
       </div>
 
     const workout_options = (this.state.end_time !== null & this.state.start_time !== null) ?
-      <div className='btn btn-warning disabled'>
-        Workout completed on {this.state.end_time.toLocaleString()}
+      <div className='row'>
+        <div className='btn btn-warning disabled'>
+          Workout completed on {this.state.end_time.toLocaleString()}
+        </div>
+        <Deleter
+          type_of_object='workout'
+          object_id={this.props.workout_id}
+          callback={this.props.reset_function}
+          text='Delete Workout'
+          size='sm'
+        />
       </div>
     :
       <div className='row'>
@@ -107,11 +126,20 @@ class WorkoutInterface extends React.Component {
         </div>
         {start_stop_button}
         <WorkoutSharer workout_id={this.props.workout_id}/>
+        <Deleter
+          type_of_object='workout'
+          object_id={this.props.workout_id}
+          callback={this.props.reset_function}
+          text='Delete Workout'
+          size='sm'
+        />
       </div>
 
     return (
       <div>
+        <div className='row'>
         {workout_options}
+        </div>
         <div>
           {sections}
           <button className='btn btn-primary btn-block' onClick={this.addSection}>Add Section</button>

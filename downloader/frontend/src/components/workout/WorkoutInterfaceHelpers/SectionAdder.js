@@ -12,6 +12,7 @@ class SectionAdder extends React.Component {
       rounds:1,
       time:'00:00:00',
       workout:'',
+      section_type:'Strength',
       movements:[]
     }
   }
@@ -22,7 +23,8 @@ class SectionAdder extends React.Component {
       rounds:this.props.data.rounds,
       time:this.props.data.time,
       workout:this.props.data.workout,
-      movements:this.props.data.movements
+      movements:this.props.data.movements,
+      section_type:this.props.data.section_type
     })
   }
 
@@ -31,10 +33,10 @@ class SectionAdder extends React.Component {
     }
 
   handleChange(value, name) {
-    this.setState({
-      ...this.state,
+    this.setState(prevState => ({
+      ...prevState,
       [name]:value,
-    })
+    }))
   }
 
   render() {
