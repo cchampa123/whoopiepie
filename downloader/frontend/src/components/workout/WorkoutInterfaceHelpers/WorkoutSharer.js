@@ -46,12 +46,11 @@ class WorkoutSharer extends React.Component {
         options={this.state.users}
         id='userTypeahead'
         onChange={(selected) => {this.setState({...this.state, selected_user:selected[0], final_confirm:true})}}
-        size='sm'
         placeholder='Share with...'
       />
       :
       <button
-        className='btn btn-info btn-sm'
+        className='btn btn-info'
         name='share_workout'
         onClick={() => this.setState({...this.state, share_confirm:true})}
       >Share Workout</button>

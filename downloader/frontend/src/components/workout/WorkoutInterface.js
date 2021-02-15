@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Section from './WorkoutInterfaceHelpers/Section';
 import WorkoutSharer from './WorkoutInterfaceHelpers/WorkoutSharer'
-import DatePicker from 'react-datepicker';
+import DatePicker from 'react-date-picker';
 import {nonTimestampDate} from '../common/getDate'
 import 'react-datepicker/dist/react-datepicker.css';
 import Deleter from './WorkoutInterfaceHelpers/Deleter'
@@ -14,7 +14,7 @@ class WorkoutInterface extends React.Component {
       sections:[],
       start_time:null,
       end_time:null,
-      scheduled_for:new Date()
+      scheduled_for:null
     }
     this.addSection = this.addSection.bind(this)
     this.handleAddNewSection = this.handleAddNewSection.bind(this)
@@ -24,17 +24,27 @@ class WorkoutInterface extends React.Component {
 
   componentDidMount() {
     axios.get('/api/workout/workout/'+String(this.props.workout_id)+'/').then(res => {
-      this.setState({...this.State,
+      const scheduled_date = new Date(Date.parse(res.data.scheduled_for)).getUTCDate()
+      const scheduled_year = new Date(Date.parse(res.data.scheduled_for)).getUTCFullYear()
+      const scheduled_month = new Date(Date.parse(res.data.scheduled_for)).getUTCMonth()+1
+      const scheduled_for_date = scheduled_date ? scheduled_year+'-'+scheduled_month+'-'+scheduled_date : null
+      this.setState(prevState => ({...prevState,
                      sections:res.data.sections,
                      start_time:res.data.start_time,
-                     end_time:res.data.end_time})
-      })
+                     end_time:res.data.end_time,
+                     scheduled_for:scheduled_for_date})
+      )
+      console.log(this.state.scheduled_for)})
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps)
+    console.log(prevState)
+    console.log(this.props)
+    console.log(this.state)
     axios.patch('/api/workout/workout/'+String(this.props.workout_id)+'/',
       {
-        scheduled_for:nonTimestampDate(this.state.scheduled_for),
+        scheduled_for:this.state.scheduled_for,
         start_time:this.state.start_time,
         end_time:this.state.end_time
       }
@@ -88,7 +98,7 @@ class WorkoutInterface extends React.Component {
     const start_stop_button = this.state.start_time===null ?
       <div>
         <button
-          className='btn btn-success btn-sm'
+          className='btn btn-success'
           name='start_time'
           onClick={(event) => this.handleChange(event)}
         >
@@ -98,7 +108,7 @@ class WorkoutInterface extends React.Component {
     :
       <div>
         <button
-          className='btn btn-danger btn-sm'
+          className='btn btn-danger'
           name='end_time'
           onClick={(event) => this.handleChange(event)}
         >
@@ -116,13 +126,23 @@ class WorkoutInterface extends React.Component {
           object_id={this.props.workout_id}
           callback={this.props.reset_function}
           text='Delete Workout'
-          size='sm'
         />
       </div>
     :
       <div className='row'>
         <div>
-          <DatePicker disableClock={true} className='form-control form-control-sm' selected={this.state.scheduled_for} onChange={date => this.setState({...this.State, scheduled_for:date})} />
+          <DatePicker
+            disableClock={true}
+            className='form-control'
+            value={this.state.scheduled_for ? new Date(this.state.scheduled_for.split('-')[0],
+                                                       this.state.scheduled_for.split('-')[1]-1,
+                                                       this.state.scheduled_for.split('-')[2]):
+                                              null}
+            onChange={date => this.setState(prevState => ({
+              ...prevState,
+              scheduled_for:date ? date.getUTCFullYear()+'-'+String(date.getUTCMonth()+1)+'-'+date.getUTCDate() : null
+            }))}
+          />
         </div>
         {start_stop_button}
         <WorkoutSharer workout_id={this.props.workout_id}/>
@@ -131,20 +151,17 @@ class WorkoutInterface extends React.Component {
           object_id={this.props.workout_id}
           callback={this.props.reset_function}
           text='Delete Workout'
-          size='sm'
         />
       </div>
 
     return (
       <div>
-        <div className='row'>
-        {workout_options}
-        </div>
-        <div>
+          <div className='row'>
+          {workout_options}
+          </div>
           {sections}
           <button className='btn btn-primary btn-block' onClick={this.addSection}>Add Section</button>
           <button className='btn btn-block btn-info' onClick={this.props.reset_function}>Back to Workout Home</button>
-        </div>
       </div>
     )
   }

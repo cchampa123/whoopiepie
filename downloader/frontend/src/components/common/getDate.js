@@ -12,5 +12,5 @@ export function nonTimestampDate(date) {
     const year = String(date_array[2])
     const month = date_array[0] < 10 ? `0${date_array[0]}` : String(date_array[0])
     const day = date_array[1] < 10 ? `0${date_array[1]}` : String(date_array[1])
-    return year+'-'+month+'-'+day;
+    return year ? year+'-'+month+'-'+day : null;
 }
