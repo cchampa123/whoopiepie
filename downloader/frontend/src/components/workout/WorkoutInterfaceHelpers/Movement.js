@@ -116,17 +116,16 @@ class Movement extends React.PureComponent {
               onChange={(selected) => this.changeSelectedMovement(selected)}
               onInputChange={(value) => this.setState(prevState => ({...prevState, movement_class_data:{...this.state.movement_class_data, name:value}}))}
               selected={[this.state.movement_class_data]}
-              size='sm'
               placeholder='Movement'/>
             <input
-              className='form-control form-control-sm'
+              className='form-control'
               type='text'
               name='metric_type_value'
               value={this.state.movement_data.metric_type_value}
               placeholder={this.state.movement_class_data.metric_type}
               onChange={(event) => this.changeMovementData(event)}/>
             <input
-              className='form-control form-control-sm'
+              className='form-control'
               type='text'
               name='metric_value'
               value={this.state.movement_data.metric_value}

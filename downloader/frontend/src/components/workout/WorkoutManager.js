@@ -119,14 +119,14 @@ class WorkoutManager extends React.Component {
         <div className='jumbotron'>
           <DatePicker
             disableClock={true}
-            className='form-control form-control-sm'
+            className='form-control'
             selected={this.state.scheduled_day_to_view}
             onChange={date => this.setState({...this.state, scheduled_day_to_view:date})}
           />
           {previous_workout}
         </div>
         <div style={{paddingTop:'15px'}}>
-          <button className='btn btn-primary btn-sm' onClick={this.handleStartWorkout}>
+          <button className='btn btn-primary' onClick={this.handleStartWorkout}>
             Plan New Workout
           </button>
         </div>

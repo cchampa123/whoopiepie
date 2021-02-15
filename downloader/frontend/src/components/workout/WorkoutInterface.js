@@ -3,8 +3,6 @@ import axios from 'axios';
 import Section from './WorkoutInterfaceHelpers/Section';
 import WorkoutSharer from './WorkoutInterfaceHelpers/WorkoutSharer'
 import DatePicker from 'react-date-picker';
-import {nonTimestampDate} from '../common/getDate'
-import 'react-datepicker/dist/react-datepicker.css';
 import Deleter from './WorkoutInterfaceHelpers/Deleter'
 
 class WorkoutInterface extends React.Component {
@@ -33,15 +31,10 @@ class WorkoutInterface extends React.Component {
                      start_time:res.data.start_time,
                      end_time:res.data.end_time,
                      scheduled_for:scheduled_for_date})
-      )
-      console.log(this.state.scheduled_for)})
+      )})
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps)
-    console.log(prevState)
-    console.log(this.props)
-    console.log(this.state)
     axios.patch('/api/workout/workout/'+String(this.props.workout_id)+'/',
       {
         scheduled_for:this.state.scheduled_for,
@@ -155,13 +148,17 @@ class WorkoutInterface extends React.Component {
       </div>
 
     return (
-      <div>
-          <div className='row'>
+      <div className='container'>
           {workout_options}
+          <div>
+            {sections}
           </div>
-          {sections}
-          <button className='btn btn-primary btn-block' onClick={this.addSection}>Add Section</button>
-          <button className='btn btn-block btn-info' onClick={this.props.reset_function}>Back to Workout Home</button>
+          <div className='row'>
+            <button className='btn btn-primary btn-block' onClick={this.addSection}>Add Section</button>
+          </div>
+          <div className='row'>
+            <button className='btn btn-block btn-info' onClick={this.props.reset_function}>Back to Workout Home</button>
+          </div>
       </div>
     )
   }

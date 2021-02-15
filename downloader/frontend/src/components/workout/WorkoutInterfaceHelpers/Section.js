@@ -148,7 +148,7 @@ class Section extends React.Component {
                     }, this)
 
     return (
-      <div className="card">
+      <div className="card d-flex">
         {this.state.show_editor ?
         <SectionAdder
           data={this.state}
@@ -161,18 +161,17 @@ class Section extends React.Component {
           <h4>{this.state.section_type}</h4>
           <h5>{this.createText()}</h5>
           <div className='row'>
-            <button className='btn btn-warning btn-sm' onClick={() => this.handleChange(true, 'show_editor')}>Edit Information</button>
+            <button className='btn btn-warning btn' onClick={() => this.handleChange(true, 'show_editor')}>Edit Information</button>
             <Deleter
               type_of_object='section'
               object_id={this.props.section_id}
               callback={this.reset_function}
               text='Delete Section'
-              size='sm'
             />
             {this.state.editing_movements ?
               <div>
-              <button className='btn btn-secondary btn-sm' onClick={() => this.setState(prevState => ({...prevState, editing_movements:false}))}>Stop editing</button>
-              <button className='btn btn-danger btn-sm' onClick={() => this.setState(prevState => ({...prevState, confirmDeleteMovements:true}))}>Delete Movements</button>
+              <button className='btn btn-secondary' onClick={() => this.setState(prevState => ({...prevState, editing_movements:false}))}>Stop editing</button>
+              <button className='btn btn-danger' onClick={() => this.setState(prevState => ({...prevState, confirmDeleteMovements:true}))}>Delete Movements</button>
               <Modal show={this.state.confirmDeleteMovements}>
                 <Modal.Body>
                   Are you sure you want to delete these movements?
@@ -184,14 +183,14 @@ class Section extends React.Component {
               </Modal>
               </div>
               :
-              <button className='btn btn-secondary btn-sm' onClick={() => this.setState(prevState => ({...prevState, editing_movements:true}))}>Edit Movements</button>}
+              <button className='btn btn-secondary' onClick={() => this.setState(prevState => ({...prevState, editing_movements:true}))}>Edit Movements</button>}
           </div>
         </div>
         <div className='card-body'>
         {movements}
         </div>
         <div className='card-footer'>
-        <button className='btn btn-secondary btn-sm' onClick={this.addMovement}>Add Movement</button>
+        <button className='btn btn-secondary' onClick={this.addMovement}>Add Movement</button>
         </div>
       </div>
       )
