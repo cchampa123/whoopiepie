@@ -13,7 +13,7 @@ class MovementLibrary extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('/api/workout/movement_class').then(res => this.setState({movements:res.data, loading:false})
+    axios.get('/api/workout/movement_class/').then(res => this.setState({movements:res.data, loading:false})
     )
   }
 
