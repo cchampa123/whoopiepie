@@ -1,7 +1,7 @@
 from rest_framework import permissions, status
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Sum, Max, Min, Avg
 from datetime import datetime
 from .serializers import *
 from .models import *
@@ -67,12 +67,60 @@ class MovementClassViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated
     ]
 
+    def list(self, request, *args, **kwargs):
+        nodummy = super().list(self, request, *args, **kwargs)
+        nodummy.data.pop(0)
+        return nodummy
+
+
 class MovementInstanceViewSet(viewsets.ModelViewSet):
     serializer_class=MovementInstanceSerializer
-    queryset=MovementInstance.objects.all().order_by('id')
     permission_classes = [
         permissions.IsAuthenticated
     ]
+    filterset_fields = {
+        'name':['exact'],
+        'section__workout__end_time':['isnull']
+    }
+
+    supported_aggregations = {
+        'max':Max,
+        'min':Min,
+        'sum':Sum,
+        'average':Avg
+    }
+
+    def get_queryset(self):
+        user_queryset = MovementInstance.objects.filter(section__workout__user = self.request.user.id).order_by('id')
+        return user_queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset=self.filter_queryset(self.get_queryset())
+
+        agg_column = request.query_params.get('agg_column')
+        agg_func = request.query_params.get('agg_func')
+        group_columns = request.query_params.get('group_columns')
+
+        if group_columns:
+            group_columns = tuple(group_columns.split(','))
+        if agg_column:
+            if agg_func and agg_func in self.supported_aggregations.keys():
+                test= queryset.values(*group_columns).\
+                    annotate(value=self.supported_aggregations[agg_func](agg_column)).\
+                    order_by()
+                return Response(test)
+            else:
+                return Response({'message':'Please provide valid aggregation functions'},
+                                status=status.HTTP_417_EXPECTATION_FAILED)
+
+        else:
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
 
 class SectionViewSet(viewsets.ModelViewSet):
     serializer_class=SectionSerializer

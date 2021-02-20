@@ -101,12 +101,16 @@ class WorkoutManager extends React.Component {
       )
     } else {
      const scheduled_workout = this.state.scheduled_workouts.length===0 ?
-              <p>You have no workout scheduled. Enjoy!</p> : (
-              <div>
+              <div className='jumbotron'>
+                <h4>Done for today!</h4>
+                <p>You have no workout scheduled.</p>
+              </div>
+              :
+              <div className='jumbotron'>
+                <h4>On deck for today:</h4>
                 <p>You have {this.state.scheduled_workouts.length} {this.state.scheduled_workouts.length === 1?'workout':'workouts'} scheduled for today. Check {this.state.scheduled_workouts.length===1 ? "it":"them"} out:</p>
                 {this.state.scheduled_workouts.map(x => <WorkoutQuickView key={x} workout_id={x} onClick={() => this.loadWorkout(x)}/>)}
               </div>
-            )
 
       const previous_workout = this.state.previous_workouts.length===0 ? <div/> :
             <div>
@@ -117,6 +121,7 @@ class WorkoutManager extends React.Component {
         <div>
         {scheduled_workout}
         <div className='jumbotron'>
+          <h4>Browse scheduled workouts</h4>
           <DatePicker
             disableClock={true}
             className='form-control'

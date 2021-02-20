@@ -8,6 +8,7 @@ import Login from './Login';
 import Logout from './Logout';
 import YoutubeDownloader from './YoutubeDownloader';
 import WorkoutTracker from './WorkoutTracker'
+import Reporter from './workout/Reporter'
 import Navbar from './common/Navbar'
 import Home from './Home'
 import { AuthContext } from './common/auth.js'
@@ -45,6 +46,7 @@ function App(props){
   const nav = [
     {link: '/youtube', text: 'Youtube Downloader'},
     {link: '/workout', text: 'Workout Tracker'},
+    {link: '/reporter', text: 'Workout Reports'},
     {link: '/', text:'WhoopiePie'}
   ]
   return (
@@ -79,6 +81,11 @@ function App(props){
               exact
               path="/workout"
               comp={WorkoutTracker}
+            />
+            <PrivateRoute
+              exact
+              path='/reporter'
+              comp={Reporter}
             />
             <Route
               exact path='/login'

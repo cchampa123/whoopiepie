@@ -99,7 +99,7 @@ class Movement extends React.PureComponent {
       )
     } else {
       return (
-          <div className='input-group'>
+          <div className='row row-cols-3'>
           {this.props.editing_movements &&
             <input
               className='form-check-input'
@@ -113,20 +113,22 @@ class Movement extends React.PureComponent {
               labelKey='name'
               options={this.state.possible_options}
               id='movementTypeahead'
+              className='col'
+              style={{paddingLeft:0, paddingRight:0}}
               onChange={(selected) => this.changeSelectedMovement(selected)}
               onInputChange={(value) => this.setState(prevState => ({...prevState, movement_class_data:{...this.state.movement_class_data, name:value}}))}
               selected={[this.state.movement_class_data]}
               placeholder='Movement'/>
             <input
-              className='form-control'
-              type='text'
+              className='form-control col'
+              type='number'
               name='metric_type_value'
               value={this.state.movement_data.metric_type_value}
               placeholder={this.state.movement_class_data.metric_type}
               onChange={(event) => this.changeMovementData(event)}/>
             <input
-              className='form-control'
-              type='text'
+              className='form-control col'
+              type='number'
               name='metric_value'
               value={this.state.movement_data.metric_value}
               placeholder={this.state.movement_class_data.metric}

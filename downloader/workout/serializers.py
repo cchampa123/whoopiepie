@@ -1,11 +1,6 @@
 from rest_framework import serializers
 from .models import *
 
-class MovementInstanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MovementInstance
-        fields = '__all__'
-
 class MovementClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovementClass
@@ -36,3 +31,9 @@ class SectionSerializer(serializers.ModelSerializer):
             'movements',
             'section_type'
             )
+
+class MovementInstanceSerializer(serializers.ModelSerializer):
+    completed_on = serializers.StringRelatedField(source='section.workout.end_time')
+    class Meta:
+        model = MovementInstance
+        fields = '__all__'
