@@ -20,7 +20,7 @@ class SectionSearcher extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('/api/workout/movement_class').then(res => this.setState(prevState => ({
+    axios.get('/api/workout/movement_class/').then(res => this.setState(prevState => ({
       ...prevState,
       movements:res.data,
       loading:false

@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from .secret_settings import DJANGO_SECRET_KEY, HOST_IP, PLEX_ROOT_SETTING, DEBUG_SETTING, POSTGRES_DB, PG_PW, PG_USER, PG_PORT, PG_HOST
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,14 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = DJANGO_SECRET_KEY
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEBUG_SETTING
+DEBUG = os.environ['DEBUG_SETTING']
 
-ALLOWED_HOSTS = HOST_IP
+ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOSTS' in key]
 
-PLEX_ROOT = PLEX_ROOT_SETTING
+PLEX_ROOT = os.environ['PLEX_ROOT_SETTING']
 
 # Application definition
 
@@ -91,11 +90,11 @@ WSGI_APPLICATION = 'downloader.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': POSTGRES_DB,
-        'USER': PG_USER,
-        'PASSWORD': PG_PW,
-        'HOST': PG_HOST,
-        'PORT': PG_PORT
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT']
     }
 }
 
