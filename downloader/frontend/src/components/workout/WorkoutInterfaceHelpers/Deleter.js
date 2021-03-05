@@ -31,7 +31,7 @@ class Deleter extends React.Component {
             <button onClick={() => this.setState({confirmation:false})} className={'btn btn-primary'}>Cancel</button>
           </Modal.Footer>
         </Modal>
-        <button onClick={() => this.setState({confirmation:true})} className={'btn btn-danger btn-'+this.props.size}>{this.props.text}</button>
+        <button onClick={() => this.setState({confirmation:true})} className={'btn btn-danger btn-block btn-'+this.props.size}>{this.props.text}</button>
       </div>
     )
   }

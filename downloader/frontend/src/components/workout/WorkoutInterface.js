@@ -89,9 +89,9 @@ class WorkoutInterface extends React.Component {
     }, this)
 
     const start_stop_button = this.state.start_time===null ?
-      <div>
+      <div className='col' style={{paddingLeft:0, paddingRight:0}}>
         <button
-          className='btn btn-success'
+          className='btn btn-success btn-block w-100 h-100'
           name='start_time'
           onClick={(event) => this.handleChange(event)}
         >
@@ -99,9 +99,9 @@ class WorkoutInterface extends React.Component {
         </button>
       </div>
     :
-      <div>
+      <div className='col' style={{paddingLeft:0, paddingRight:0}}>
         <button
-          className='btn btn-danger'
+          className='btn btn-danger w-100 h-100'
           name='end_time'
           onClick={(event) => this.handleChange(event)}
         >
@@ -110,8 +110,8 @@ class WorkoutInterface extends React.Component {
       </div>
 
     const workout_options = (this.state.end_time !== null & this.state.start_time !== null) ?
-      <div className='row'>
-        <div className='btn btn-warning disabled'>
+      <div className='row g-0'>
+        <div className='btn btn-warning disabled col h-100 w-100'>
           Workout completed on {this.state.end_time.toLocaleString()}
         </div>
         <Deleter
@@ -122,11 +122,11 @@ class WorkoutInterface extends React.Component {
         />
       </div>
     :
-      <div className='row'>
-        <div>
+      <div className='row g-0' style={{marginLeft:0, marginRight:0}}>
+        <div className='col' style={{paddingLeft:0, paddingRight:0}}>
           <DatePicker
             disableClock={true}
-            className='form-control'
+            className='form-control p-0 w-100 h-100'
             value={this.state.scheduled_for ? new Date(this.state.scheduled_for.split('-')[0],
                                                        this.state.scheduled_for.split('-')[1]-1,
                                                        this.state.scheduled_for.split('-')[2]):
@@ -138,19 +138,23 @@ class WorkoutInterface extends React.Component {
           />
         </div>
         {start_stop_button}
-        <WorkoutSharer workout_id={this.props.workout_id}/>
-        <Deleter
-          type_of_object='workout'
-          object_id={this.props.workout_id}
-          callback={this.props.reset_function}
-          text='Delete Workout'
-        />
+        <div className='col' style={{paddingLeft:0, paddingRight:0}}>
+          <WorkoutSharer workout_id={this.props.workout_id}/>
+        </div>
+        <div className='col' style={{paddingLeft:0, paddingRight:0}}>
+          <Deleter
+            type_of_object='workout'
+            object_id={this.props.workout_id}
+            callback={this.props.reset_function}
+            text='Delete Workout'
+          />
+        </div>
       </div>
 
     return (
-      <div className='container'>
+      <div className='container g-0'>
           {workout_options}
-          <div>
+          <div className='row'>
             {sections}
           </div>
           <div className='row'>

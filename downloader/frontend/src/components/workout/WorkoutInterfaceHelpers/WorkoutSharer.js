@@ -50,12 +50,12 @@ class WorkoutSharer extends React.Component {
       />
       :
       <button
-        className='btn btn-info'
+        className='btn btn-info btn-block w-100 h-100'
         name='share_workout'
         onClick={() => this.setState({...this.state, share_confirm:true})}
       >Share Workout</button>
     return (
-      <div>
+      <div className='h-100 w-100'>
         {typeahead}
         <Modal show={this.state.final_confirm}>
           <Modal.Header>Confirm choice</Modal.Header>

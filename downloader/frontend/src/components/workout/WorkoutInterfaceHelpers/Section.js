@@ -148,7 +148,7 @@ class Section extends React.Component {
                     }, this)
 
     return (
-      <div className="card d-flex">
+      <div className="card" style={{width:'100%'}}>
         {this.state.show_editor ?
         <SectionAdder
           data={this.state}

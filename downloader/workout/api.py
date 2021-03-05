@@ -1,5 +1,6 @@
 from rest_framework import permissions, status
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, filters
+from django_filters import Filter, FilterSet
 from rest_framework.response import Response
 from django.db.models import Prefetch, Sum, Max, Min, Avg
 from datetime import datetime
@@ -124,10 +125,34 @@ class MovementInstanceViewSet(viewsets.ModelViewSet):
 
 class SectionViewSet(viewsets.ModelViewSet):
     serializer_class=SectionSerializer
-    queryset=Section.objects.prefetch_related(Prefetch(
-        'movements',
-        queryset=MovementInstance.objects.order_by('id')
-    )).order_by('id')
     permission_classes = [
         permissions.IsAuthenticated
     ]
+
+    filterset_fields = {
+        'section_type':['exact']
+    }
+
+    def get_queryset(self):
+        queryset=Section.objects.prefetch_related(Prefetch(
+            'movements',
+            queryset=MovementInstance.objects.order_by('id')
+        )).order_by('id')
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        movement_filter = self.request.query_params.get('movement')
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if movement_filter:
+            filter = movement_filter.split(',')
+            for filter in filter:
+                queryset = queryset.filter(movements__name=filter).exclude(movements__name=1)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
