@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DEBUG_SETTING']
+DEBUG = bool(os.environ.get('DEBUG_SETTING'))
 
-ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOSTS' in key]
+ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOST' in key]
 
 PLEX_ROOT = os.environ['PLEX_ROOT_SETTING']
 
