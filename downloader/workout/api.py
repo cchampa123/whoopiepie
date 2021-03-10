@@ -147,7 +147,7 @@ class SectionViewSet(viewsets.ModelViewSet):
         if movement_filter:
             filter = movement_filter.split(',')
             for filter in filter:
-                queryset = queryset.filter(movements__name=filter).exclude(movements__name=1)
+                queryset = queryset.filter(movements__name=filter).exclude(movements__name=1).distinct()
 
         page = self.paginate_queryset(queryset)
         if page is not None:
