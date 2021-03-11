@@ -6,11 +6,6 @@ import { useAuth } from './common/auth'
 
 function Logout() {
 
-  const setAuthTokens = useAuth()
-
-  axios.post('/api/auth/logout')
-  setAuthTokens(null)
-
   return (
     <div>
       <h2>You have been logged out.</h2>

@@ -1,32 +1,26 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useMemo} from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import axios from "axios";
+
+import {Navbar, Nav} from 'react-bootstrap'
+import {LinkContainer} from 'react-router-bootstrap'
 
 import PrivateRoute from './common/PrivateRoute'
 import Login from './Login';
-import Logout from './Logout';
 import YoutubeDownloader from './YoutubeDownloader';
 import WorkoutTracker from './WorkoutTracker'
 import Reporter from './workout/Reporter'
-import Navbar from './common/Navbar'
 import Home from './Home'
-import { AuthContext } from './common/auth.js'
-
-
+import { AuthContext } from './common/auth'
+import './common/Navbar.css'
 
 function App(props){
-  const existingTokens=localStorage.getItem('tokens')
-  const [authTokens, setAuthTokens] = useState(existingTokens)
-
-  const setTokens = (data) => {
-    localStorage.setItem('tokens', data);
-    setAuthTokens(data)
-  }
+  const [user, setUser] = useState(null)
 
   axios.interceptors.request.use(function(config) {
-      if (authTokens) {
-        const token = "Token "+authTokens;
+      if (user) {
+        const token = "Token "+user.token;
         config.headers.Authorization = token;
       }
       return config;
@@ -38,34 +32,41 @@ function App(props){
   }, function(error) {
     const originalRequest = error.config;
     if (error.response.status===401) {
-      localStorage.setItem('tokens', '')
       window.location.reload(false)
     }
   })
+
+  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
   const nav = [
     {link: '/youtube', text: 'Youtube Downloader'},
     {link: '/workout', text: 'Workout Tracker'},
     {link: '/reporter', text: 'Workout Reports'},
-    {link: '/', text:'WhoopiePie'}
+    {link: '/', text:'Home'}
   ]
   return (
-    <AuthContext.Provider value={{ authTokens, setAuthTokens:setTokens }}>
-    <div id={'outer-container'}>
+    <AuthContext.Provider value={value}>
       <Router>
-        {authTokens && authTokens !== 'undefined' ?
-            <Navbar
-                logout={() => {
-                  setTokens('');
-                  window.location.reload(false);
-                  }}
-                link_list={nav}
-                pageWrapID={'page-wrap'}
-                outerContainerID={'outer-container'}
-              /> :
-              <div/>
-            }
-        <div className="container" style={{paddingTop:'60px'}} id={'page-wrap'}>
+        {user ?
+          <Navbar bg="dark" variant='dark' expand="lg" collapseOnSelect={true}>
+          <LinkContainer to='/'>
+            <Navbar.Brand style={{color:`rgb(170,170,170)`}}>WhoopiePie</Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <Nav className='mr-auto'>
+              {nav.map(function(x, index) {return(
+                <LinkContainer to={x.link} key={index}>
+                  <Nav.Link>{x.text}</Nav.Link>
+                </LinkContainer>
+                )
+              })}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        :
+        <div/>}
+        <div className='container' style={{paddingTop:30}}>
           <Switch>
             <PrivateRoute
               exact
@@ -94,7 +95,6 @@ function App(props){
           </Switch>
         </div>
       </Router>
-    </div>
     </AuthContext.Provider>
   )
 }

@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-import { useAuth } from './common/auth'
+import { AuthContext } from './common/auth'
 
 function Login() {
 
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const { user, setUser } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const { setAuthTokens } = useAuth();
 
   function postLogin() {
     axios.post('/api/auth/login',
@@ -18,15 +16,13 @@ function Login() {
       'username':userName,
       'password':password
     }).then(result => {
-      console.log('hello')
-      setAuthTokens(result.data.token);
-      setLoggedIn(true);
+      setUser(result.data);
     }).catch(e => {
-      setIsError(true);
+      console.log('error')
     });
   }
 
-  if (isLoggedIn) {
+  if (user !== null) {
     return <Redirect to='/'/>
   }
 

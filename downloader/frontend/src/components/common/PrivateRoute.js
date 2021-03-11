@@ -1,19 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useAuth } from './auth.js'
+import {AuthContext} from './auth'
 
 function PrivateRoute({ comp: Component, exact, path }) {
 
-  const { authTokens } = useAuth();
+  const {user, setUser}  = useContext(AuthContext);
 
-  return (
-    <Route exact={exact} path={path} render={(props) => (
-        (authTokens && authTokens!=='undefined')
-        ? <Component />
-        : <Redirect to="/Login"/>
-        )}
-      />
-  )
+  if (user) {
+    return (<Route exact={exact} path={path} render={(props) => <Component />}/>)
+  } else {
+    return(<Redirect to="/Login"/>)
+  }
 }
 
 export default PrivateRoute;
