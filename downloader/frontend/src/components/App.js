@@ -17,6 +17,11 @@ import './common/Navbar.css'
 
 function App(props){
   const [user, setUser] = useState(null)
+  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+
+  function logout() {
+    axios.post('/api/auth/logout').then(()=>setUser(null))
+  }
 
   axios.interceptors.request.use(function(config) {
       if (user) {
@@ -36,13 +41,11 @@ function App(props){
     }
   })
 
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-
   const nav = [
     {link: '/youtube', text: 'Youtube Downloader'},
     {link: '/workout', text: 'Workout Tracker'},
     {link: '/reporter', text: 'Workout Reports'},
-    {link: '/', text:'Home'}
+    {link: '/', text:'Home'},
   ]
   return (
     <AuthContext.Provider value={value}>
@@ -61,6 +64,7 @@ function App(props){
                 </LinkContainer>
                 )
               })}
+              <Nav.Link onClick={()=>logout()}>Log Out</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
