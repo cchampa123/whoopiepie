@@ -1,15 +1,13 @@
-FROM python:3.7
+FROM ubuntu:20.04
+
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN apt-get update && \
     apt-get install -y \
       vim \
       wget \
-      apache2 \
-      libapache2-mod-wsgi-py3
-
-COPY requirements.txt requirements.txt
-RUN python -m venv /usr/local/env
-ENV PATH=/usr/local/env/bin:$PATH
-RUN pip install -r requirements.txt
+      apache2
 
 COPY apache_config_ssl.conf /etc/apache2/sites-available/whoopiepie_ssl.conf
 COPY apache_config_standard.conf /etc/apache2/sites-available/whoopiepie_standard.conf
@@ -19,9 +17,7 @@ RUN a2dissite default-ssl.conf
 RUN a2dissite 000-default.conf
 RUN a2ensite whoopiepie_ssl.conf
 RUN a2ensite whoopiepie_standard.conf
-RUN a2enmod \
-    ssl \
-    wsgi \
-    rewrite
+RUN a2enmod ssl proxy_http
+RUN a2enmod rewrite
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
