@@ -6,14 +6,14 @@ import axios from "axios";
 import {Navbar, Nav} from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
-import PrivateRoute from './common/PrivateRoute'
-import Login from './Login';
-import YoutubeDownloader from './YoutubeDownloader';
-import WorkoutTracker from './WorkoutTracker'
-import Reporter from './workout/Reporter'
-import Home from './Home'
-import { AuthContext } from './common/auth'
-import './common/Navbar.css'
+import PrivateRoute from './components/common/PrivateRoute'
+import Login from './components/Login';
+import YoutubeDownloader from './components/YoutubeDownloader';
+import WorkoutTracker from './components/WorkoutTracker'
+import Reporter from './components/workout/Reporter'
+import Home from './components/Home'
+import { AuthContext } from './components/common/auth'
+import './components/common/Navbar.css'
 
 function App(props){
   const [user, setUser] = useState(null)
@@ -22,6 +22,9 @@ function App(props){
   function logout() {
     axios.post('/api/auth/logout').then(()=>setUser(null))
   }
+
+  const {REACT_APP_BASEURL} = process.env
+  console.log(REACT_APP_BASEURL)
 
   axios.interceptors.request.use(function(config) {
       if (user) {
@@ -103,4 +106,4 @@ function App(props){
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('app'))
+export default App;

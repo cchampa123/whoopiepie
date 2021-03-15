@@ -18,9 +18,8 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
-    re_path('^(?!api)(?!webdav).*', include('frontend.urls')),
-    path('api/downloader/', include('youtube_downloader.urls')),
-    path('api/auth/', include('accounts.urls')),
-    path('api/workout', include('workout.urls'))
+    path('/admin/', admin.site.urls),
+    path('/downloader/', include('youtube_downloader.urls')),
+    path('/auth/', include('accounts.urls')),
+    path('/workout', include('workout.urls'))
 ]

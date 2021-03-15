@@ -24,4 +24,9 @@ CMD ["gunicorn",\
      "gthread",\
      "-b",\
      "0.0.0.0:8000",\
+     "--log-file",\
+     "/gunicorn_log.log",\
+     "--log-level",\
+     "debug",\
+     "--reload",\
      "downloader.wsgi"]

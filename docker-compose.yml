@@ -25,6 +25,20 @@ services:
     env_file:
       - .env
 
+  frontend:
+    build:
+      context: .
+      dockerfile: ./front_docker
+    environment:
+      API_BASE_URL: ${API_BASE_URL}
+      DEBUG_SETTING: ${DEBUG_SETTING}
+    expose:
+      - 3000
+    volumes:
+      - ${FRONTEND_ROOT}:/app
+    command: "chmod +x /app/entrypoint.sh"
+    entrypoint: ["/bin/bash", "/app/entrypoint.sh"]
+
   apache:
     build:
       context: .
@@ -36,3 +50,4 @@ services:
       - .env
     volumes:
       - ${CERTS}:/certs/
+      - ${NEXTCLOUD_DATA_DIRECTORY}:/var/www/nextcloud
