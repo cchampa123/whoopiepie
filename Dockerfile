@@ -1,10 +1,5 @@
 FROM python:3.7
-RUN apt-get update && \
-    apt-get install -y \
-      vim \
-      wget \
-      apache2 \
-      libapache2-mod-wsgi-py3
+RUN apt-get update
 
 COPY requirements.txt requirements.txt
 RUN python -m venv /usr/local/env
@@ -13,7 +8,7 @@ RUN pip install -r requirements.txt
 
 WORKDIR /whoopiepie
 
-CMD ["gunicorn",\
+ENTRYPOINT ["gunicorn",\
      "--worker-tmp-dir",\
      "/dev/shm",\
      "--workers",\
