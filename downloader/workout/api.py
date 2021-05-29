@@ -1,158 +1,91 @@
-from rest_framework import permissions, status
-from rest_framework import viewsets, mixins, filters
-from django_filters import Filter, FilterSet
+from .models import MovementClass, Workout, Section, MovementInstance
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from .serializers import WorkoutSerializer, SectionSerializer, MovementClassSerializer, MovementInstanceSerializer, LoginSerializer, WhoopiePieUserSerializer
 from rest_framework.response import Response
-from django.db.models import Prefetch, Sum, Max, Min, Avg
-from datetime import datetime
-from .serializers import *
-from .models import *
+from knox.models import AuthToken
+from .models import WhoopiePieUser
 
-class WorkoutViewSet(viewsets.ModelViewSet):
-    serializer_class=WorkoutSerializer
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
+class LoginAPI(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        #import pdb; pdb.set_trace()
+        if hasattr(user, 'whoopiepieuser'):
+            return Response({
+                "user": WhoopiePieUserSerializer(user.whoopiepieuser, context=self.get_serializer_context()).data,
+                "token": AuthToken.objects.create(user)[1]
+            })
+        else:
+            message = {'non_field_errors':'Your account is not enabled for access to this app. Contact the administrator.'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+class WorkoutViewSet(ModelViewSet):
+    serializer_class = WorkoutSerializer
+    permission_classes = [IsAuthenticated]
     filterset_fields = {
-        'start_time':['gte', 'lte', 'exact', 'isnull'],
-        'end_time':['gte', 'lte', 'exact', 'isnull'],
-        'scheduled_for':['gte', 'lte', 'exact']
+        'date':['gt', 'lt', 'exact', 'gte', 'lte']
     }
 
-    def update(self, request, *args, **kwargs):
-        user_to_share_with = request.query_params.get('user_to_share_with')
-        if user_to_share_with:
-            workout_to_share = Workout.objects.get(id=self.kwargs['pk'])
-            relevant_sections = workout_to_share.sections.all()
-            workout_to_share.pk = None
-            workout_to_share.start_time = None
-            workout_to_share.end_time = None
-            workout_to_share.user = User.objects.get(id=user_to_share_with)
-            workout_to_share.save()
-            for section in relevant_sections:
-                relevant_movements = section.movements.all()
-                section.pk = None
-                section.workout=workout_to_share
-                section.save()
-                for movement_instance in relevant_movements:
-                    movement_instance.pk = None
-                    movement_instance.section = section
-                    movement_instance.save()
-            return Response(WorkoutSerializer(workout_to_share).data)
-        else:
-            partial = kwargs.pop('partial', False)
-            instance = self.get_object()
-            serializer = self.get_serializer(instance, data=request.data, partial=partial)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
-            return Response(serializer.data)
-
     def get_queryset(self):
-        user_queryset = Workout.objects.filter(user=self.request.user.id).order_by('id')
-        order_by = self.request.query_params.get('order_by', None)
-        if order_by:
-            return user_queryset.order_by(order_by)
-        return user_queryset
+        user = self.request.user.whoopiepieuser
+        return Workout.objects.filter(user=user).order_by('date', 'id')
 
     def create(self, request):
-        data_dict = request.data
-        data_dict['user'] = request.user.id
-        serializer = WorkoutSerializer(data=data_dict)
-        if serializer.is_valid():
-            serializer.save()
-        return Response(serializer.data)
+        request.data['user']=request.user.id
+        return super().create(request)
 
-class MovementClassViewSet(viewsets.ModelViewSet):
-    serializer_class=MovementClassSerializer
+    def update(self, request, *args, **kwargs):
+        request.data['user']=request.user.id
+        return super().update(request, *args, **kwargs)
+
+class SectionViewSet(ModelViewSet):
+    serializer_class = SectionSerializer
+    permission_classes = [IsAuthenticated]
+    filterset_fields = {
+        'workout_id':['exact']
+    }
+
+    def get_queryset(self):
+        user = self.request.user.whoopiepieuser
+        return Section.objects.filter(user=user)
+
+    def create(self, request):
+        request.data['user']=request.user.id
+        return super().create(request)
+
+    def update(self, request, *args, **kwargs):
+        request.data['user']=request.user.id
+        return super().update(request, *args, **kwargs)
+
+class MovementClassViewSet(ModelViewSet):
+    serializer_class = MovementClassSerializer
+    permission_classes = [IsAuthenticated]
     queryset = MovementClass.objects.all()
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-
-    def list(self, request, *args, **kwargs):
-        nodummy = super().list(self, request, *args, **kwargs)
-        nodummy.data.pop(0)
-        return nodummy
-
-
-class MovementInstanceViewSet(viewsets.ModelViewSet):
-    serializer_class=MovementInstanceSerializer
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
     filterset_fields = {
-        'name':['exact'],
-        'section__workout__end_time':['isnull']
+        'name':['icontains', 'exact']
     }
 
-    supported_aggregations = {
-        'max':Max,
-        'min':Min,
-        'sum':Sum,
-        'average':Avg
+
+class MovementInstanceViewSet(ModelViewSet):
+    serializer_class = MovementInstanceSerializer
+    permission_classes = [IsAuthenticated]
+    filterset_fields = {
+        'workout_id':['exact']
     }
 
     def get_queryset(self):
-        user_queryset = MovementInstance.objects.filter(section__workout__user = self.request.user.id).order_by('id')
-        return user_queryset
+        user = self.request.user.whoopiepieuser
+        return MovementInstance.objects.filter(user=user)
 
-    def list(self, request, *args, **kwargs):
-        queryset=self.filter_queryset(self.get_queryset())
+    def create(self, request):
+        request.data['user']=request.user.id
+        return super().create(request)
 
-        agg_column = request.query_params.get('agg_column')
-        agg_func = request.query_params.get('agg_func')
-        group_columns = request.query_params.get('group_columns')
-
-        if group_columns:
-            group_columns = tuple(group_columns.split(','))
-        if agg_column:
-            if agg_func and agg_func in self.supported_aggregations.keys():
-                test= queryset.values(*group_columns).\
-                    annotate(value=self.supported_aggregations[agg_func](agg_column)).\
-                    order_by()
-                return Response(test)
-            else:
-                return Response({'message':'Please provide valid aggregation functions'},
-                                status=status.HTTP_417_EXPECTATION_FAILED)
-
-        else:
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-
-class SectionViewSet(viewsets.ModelViewSet):
-    serializer_class=SectionSerializer
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-
-    filterset_fields = {
-        'section_type':['exact']
-    }
-
-    def get_queryset(self):
-        queryset=Section.objects.prefetch_related(Prefetch(
-            'movements',
-            queryset=MovementInstance.objects.order_by('id')
-        )).order_by('id')
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        movement_filter = self.request.query_params.get('movement')
-        queryset = self.filter_queryset(self.get_queryset())
-
-        if movement_filter:
-            filter = movement_filter.split(',')
-            for filter in filter:
-                queryset = queryset.filter(movements__name=filter).exclude(movements__name=1).distinct()
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def update(self, request, *args, **kwargs):
+        request.data['user']=request.user.id
+        return super().update(request, *args, **kwargs)

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
 from knox.models import AuthToken
 from .serializers import UserSerializer, LoginSerializer
-from django.contrib.auth.models import User
+from .models import User
 
 # Login api
 class LoginAPI(generics.GenericAPIView):
