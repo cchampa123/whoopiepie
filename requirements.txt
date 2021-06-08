@@ -7,6 +7,7 @@ django-rest-knox==4.1.0
 django-webpack-loader==0.7.0
 djangorestframework==3.11.2
 gunicorn==20.0.4
+PlexAPI==4.6.0
 psycopg2-binary==2.8.6
 pycparser==2.20
 pytz==2020.1

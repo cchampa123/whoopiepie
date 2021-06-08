@@ -1,5 +1,5 @@
 FROM python:3.7
-RUN apt-get update
+RUN apt-get update && apt-get install -y ffmpeg
 
 COPY requirements.txt requirements.txt
 RUN python -m venv /usr/local/env

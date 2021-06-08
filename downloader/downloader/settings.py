@@ -28,7 +28,7 @@ USE_X_FORWARDED_HOST = True
 FORCE_SCRIPT_NAME='/api'
 ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOST' in key]
 
-PLEX_ROOT = os.environ['PLEX_ROOT_SETTING']
+PLEX_ROOT = '/plex'
 
 # Application definition
 
