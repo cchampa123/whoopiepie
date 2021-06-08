@@ -61,7 +61,8 @@ def _download_audio(data, plex):
             ],
         'postprocessor_args': ['-metadata', 'Title='+song_title,
                                '-metadata', 'Artist='+artist,
-                               '-metadata', 'Album='+album]
+                               '-metadata', 'Album='+album],
+        'noplaylist': True
         }
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -85,7 +86,8 @@ def _download_video(data , plex):
         'postprocessors': [
             {'key': 'FFmpegMetadata',}
             ],
-        'postprocessor_args': ['-metadata', 'Title='+title]
+        'postprocessor_args': ['-metadata', 'Title='+title],
+        'noplaylist': True
         }
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
