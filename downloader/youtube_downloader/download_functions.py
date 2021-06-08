@@ -69,7 +69,7 @@ def _download_audio(data, plex):
 
     plex.library.section('Music').update()
     new_track = _find_track(artist, song_title, plex)
-    if playlist !== '':
+    if playlist != '':
         playlist_instance = plex.fetchItem('/playlists/{}'.format(playlist))
         playlist_instance.addItems([new_track])
 
