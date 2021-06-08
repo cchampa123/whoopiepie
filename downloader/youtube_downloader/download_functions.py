@@ -12,7 +12,8 @@ def _get_audio_data(data):
         album = artist
     else:
         album = data['album']
-    return song_title, artist, album
+    playlist = data['playlist']
+    return song_title, artist, album, playlist
 
 def _get_video_data(data):
     show = data['show']
@@ -39,8 +40,16 @@ def _make_audio_path(artist, album):
         os.mkdir(path_album)
     return path_album
 
-def _download_audio(data):
-    song_title, artist, album = _get_audio_data(data)
+def _find_track(artist, title, plex):
+    while True:
+        tracks = [x.tracks() for x in plex.library.section('Music').search(artist)]
+        flattened_tracks = [item for sublist in tracks for item in sublist]
+        searched_list = [x for x in flattened_tracks if x.title==title]
+        if len(searched_list) > 0:
+            return searched_list[0]
+
+def _download_audio(data, plex):
+    song_title, artist, album, playlist = _get_audio_data(data)
     download_path = os.path.join(_make_audio_path(artist, album), song_title)
     for_command = download_path+".%(ext)s"
     ydl_opts = {
@@ -58,7 +67,13 @@ def _download_audio(data):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([data['youtube_url']])
 
-def _download_video(data):
+    plex.library.section('Music').update()
+    new_track = _find_track(artist, song_title, plex)
+    if playlist !== '':
+        playlist_instance = plex.fetchItem('/playlists/{}'.format(playlist))
+        playlist_instance.addItems([new_track])
+
+def _download_video(data , plex):
     show, season, episode, title = _get_video_data(data)
     path_season = _make_video_path(show, season)
     filename = "{} - s{:02d}e{:02d}".format(show, season, episode)
@@ -76,8 +91,8 @@ def _download_video(data):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([data['youtube_url']])
 
-def process_download(data):
+def process_download(data, plex):
     if data['audio_video']=='audio':
-        _download_audio(data)
+        _download_audio(data, plex)
     else:
-        _download_video(data)
+        _download_video(data, plex)
