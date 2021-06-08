@@ -39,7 +39,7 @@ def _make_audio_path(artist, album):
         os.mkdir(path_album)
     return path_album
 
-def _download_audio(data, plex):
+def _download_audio(data):
     song_title, artist, album = _get_audio_data(data)
     download_path = os.path.join(_make_audio_path(artist, album), song_title)
     for_command = download_path+".%(ext)s"
@@ -58,7 +58,7 @@ def _download_audio(data, plex):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([data['youtube_url']])
 
-def _download_video(data , plex):
+def _download_video(data):
     show, season, episode, title = _get_video_data(data)
     path_season = _make_video_path(show, season)
     filename = "{} - s{:02d}e{:02d}".format(show, season, episode)
@@ -76,8 +76,8 @@ def _download_video(data , plex):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([data['youtube_url']])
 
-def process_download(data, plex):
+def process_download(data):
     if data['audio_video']=='audio':
-        _download_audio(data, plex)
+        _download_audio(data)
     else:
-        _download_video(data, plex)
+        _download_video(data)
