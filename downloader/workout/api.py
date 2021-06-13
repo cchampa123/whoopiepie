@@ -24,6 +24,20 @@ class LoginAPI(generics.GenericAPIView):
             message = {'non_field_errors':'Your account is not enabled for access to this app. Contact the administrator.'}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
+class UserAPI(generics.GenericAPIView):
+    serializer_class = WhoopiePieUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        if hasattr(request.user, 'whoopiepieuser'):
+            return Response(
+                WhoopiePieUserSerializer(request.user.ydluser, context=self.get_serializer_context()).data,
+                status=status.HTTP_200_OK
+            )
+        else:
+            message = {'non_field_errors':'Your account is not enabled for access to this app. Contact the administrator.'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
 class WorkoutViewSet(ModelViewSet):
     serializer_class = WorkoutSerializer
     permission_classes = [IsAuthenticated]
@@ -52,7 +66,7 @@ class SectionViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user.whoopiepieuser
-        return Section.objects.filter(user=user)
+        return Section.objects.filter(user=user).order_by('order')
 
     def create(self, request):
         request.data['user']=request.user.id
@@ -80,7 +94,7 @@ class MovementInstanceViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user.whoopiepieuser
-        return MovementInstance.objects.filter(user=user)
+        return MovementInstance.objects.filter(user=user).order_by('superset', 'order')
 
     def create(self, request):
         request.data['user']=request.user.id

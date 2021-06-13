@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from .api import WorkoutViewSet, MovementInstanceViewSet, MovementClassViewSet, SectionViewSet, LoginAPI
+from .api import WorkoutViewSet, MovementInstanceViewSet, MovementClassViewSet, SectionViewSet, LoginAPI, UserAPI
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -11,5 +11,6 @@ router.register('section', SectionViewSet, basename='Section')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('login/', LoginAPI.as_view())
+    path('login/', LoginAPI.as_view()),
+    path('user/', UserAPI.as_view())
 ]

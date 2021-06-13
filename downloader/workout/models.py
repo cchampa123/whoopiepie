@@ -60,6 +60,7 @@ class Section(models.Model):
     score_number = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     score_time = models.DurationField(default = timedelta, blank=True)
     extra_instructions = models.TextField(default = '', blank=True)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return "{} {} Section {} - {}".format(
@@ -80,6 +81,7 @@ class MovementInstance(models.Model):
     score_number = models.DecimalField(max_digits = 10, decimal_places = 2, blank = True, null=True)
     score_time = models.DurationField(default = timedelta, blank=True)
     superset = models.PositiveIntegerField(default=2)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return "{} {} Movement {} - {}".format(
