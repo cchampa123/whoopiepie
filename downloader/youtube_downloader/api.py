@@ -4,12 +4,9 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import YoutubeUrlSerializer, LoginSerializer, YDLUserSerializer
-from .download_functions import process_download
 from plexapi.myplex import MyPlexAccount
+from .tasks import process_async_download
 import os
-
-account = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
-plex = account.resource(os.environ['PLEX_SERVERNAME']).connect()
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -52,7 +49,7 @@ class YoutubeUrlView(APIView):
 
     def post(self, request):
 
-        process_download(request.data, plex)
+        process_async_download(request.data, plex)
 
         return Response(status=status.HTTP_200_OK)
 
@@ -62,9 +59,13 @@ class PlexPlaylistView(GenericViewSet):
     ]
 
     def list(self, request, *args, **kwargs):
+        account = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
+        plex = account.resource(os.environ['PLEX_SERVERNAME']).connect()
         return Response([{'title':x.title, 'key':x.key[11:len(x.key)]} for x in plex.playlists()])
 
     def retrieve(self, request, *args, **kwargs):
+        account = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
+        plex = account.resource(os.environ['PLEX_SERVERNAME']).connect()
         playlist_songs = plex.fetchItem('/playlists/{}'.format(kwargs['pk'])).items()
         songtitles = [x.title for x in playlist_songs]
         songartists = [x.artist().title for x in playlist_songs]
