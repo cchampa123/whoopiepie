@@ -1,6 +1,7 @@
 from celery import shared_task
 from .download_functions import process_download
 from plexapi.myplex import MyPlexAccount
+import os
 
 @shared_task
 def process_async_download(data):
