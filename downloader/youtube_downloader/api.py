@@ -49,7 +49,7 @@ class YoutubeUrlView(APIView):
 
     def post(self, request):
 
-        process_async_download(request.data, plex)
+        process_async_download(request.data)
 
         return Response(status=status.HTTP_200_OK)
 
