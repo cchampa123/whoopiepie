@@ -38,11 +38,28 @@ class WorkoutSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
 class SectionSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if ret['score_number']:
+            ret['score_number'] = ret['score_number'].strip('0').strip('.')
+        return ret
+
     class Meta:
         model = Section
         fields = '__all__'
 
 class MovementInstanceSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        print(ret)
+        if ret['score_number']:
+            ret['score_number'] = ret['score_number'].strip('0').strip('.')
+        if ret['count']:
+            ret['count'] = ret['count'].strip('0').strip('.')
+        return ret
+
     class Meta:
         model = MovementInstance
         fields = '__all__'
