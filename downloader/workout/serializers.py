@@ -29,6 +29,7 @@ class MovementClassSerializer(serializers.ModelSerializer):
 
 class MovementInstanceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    date = serializers.StringRelatedField(source='workout_id.date', read_only=True)
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         print(ret)

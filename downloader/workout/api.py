@@ -89,7 +89,11 @@ class MovementInstanceViewSet(ModelViewSet):
     serializer_class = MovementInstanceSerializer
     permission_classes = [IsAuthenticated]
     filterset_fields = {
-        'workout_id':['exact']
+        'workout_id':['exact'],
+        'score_type':['exact'],
+        'count_type':['exact'],
+        'count':['exact'],
+        'movement_id':['exact']
     }
 
     def get_queryset(self):
@@ -103,3 +107,13 @@ class MovementInstanceViewSet(ModelViewSet):
     def update(self, request, *args, **kwargs):
         request.data['user']=request.user.id
         return super().update(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        unique_counts = request.query_params.get('unique_counts', None)
+        movement = request.query_params.get('movement_id', None)
+        if unique_counts:
+            if not movement:
+                return Response({'error':'You must specify a movement in order to get the unique movement counts'}, status=status.HTTP_400_BAD_REQUEST)
+            data = MovementInstance.objects.filter(movement_id=movement).values('count', 'count_type').distinct()
+            return Response(data, status=status.HTTP_200_OK)
+        return super().list(request, *args, **kwargs)
