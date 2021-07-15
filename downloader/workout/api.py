@@ -6,6 +6,8 @@ from .serializers import WorkoutSerializer, SectionSerializer, MovementClassSeri
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .models import WhoopiePieUser
+from django.db.models.aggregates import Max, Min
+from django.db.models import Q
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -111,9 +113,19 @@ class MovementInstanceViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         unique_counts = request.query_params.get('unique_counts', None)
         movement = request.query_params.get('movement_id', None)
+        max_score = request.query_params.get('max_score', None)
         if unique_counts:
             if not movement:
                 return Response({'error':'You must specify a movement in order to get the unique movement counts'}, status=status.HTTP_400_BAD_REQUEST)
             data = MovementInstance.objects.filter(movement_id=movement).values('count', 'count_type').distinct()
+            return Response(data, status=status.HTTP_200_OK)
+        if max_score:
+            if not movement:
+                return Response({'error':'You must specify a movement in order to get max scores'}, status=status.HTTP_400_BAD_REQUEST)
+            data = MovementInstance.objects.filter(movement_id=movement)\
+                    .exclude(Q(score_number=None) & Q(score_time='00:00:00'))\
+                    .values('score_type', 'count_type', 'count')\
+                    .annotate(score_number=Max('score_number'),
+                              score_time=Min('score_time'))
             return Response(data, status=status.HTTP_200_OK)
         return super().list(request, *args, **kwargs)
