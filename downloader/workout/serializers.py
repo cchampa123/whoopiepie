@@ -32,7 +32,6 @@ class MovementInstanceSerializer(serializers.ModelSerializer):
     date = serializers.StringRelatedField(source='workout_id.date', read_only=True)
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        print(ret)
         if ret['score_number']:
             ret['score_number'] = ret['score_number'].strip('0').strip('.')
         if ret['count']:
