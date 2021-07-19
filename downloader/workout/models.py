@@ -84,9 +84,9 @@ class MovementInstance(models.Model):
     order = models.IntegerField(default=0)
 
     def __str__(self):
-        return "{} {} Movement {} - {}".format(
+        return "{} {} {} - {}".format(
             self.user.user.first_name,
             self.user.user.last_name,
-            self.id,
+            self.movement_id.name,
             self.workout_id.date
         )
