@@ -82,7 +82,7 @@ class SectionViewSet(ModelViewSet):
 class MovementClassViewSet(ModelViewSet):
     serializer_class = MovementClassSerializer
     permission_classes = [IsAuthenticated]
-    queryset = MovementClass.objects.all()
+    queryset = MovementClass.objects.all().order_by('name')
     filterset_fields = {
         'name':['icontains', 'exact']
     }
