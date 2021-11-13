@@ -2,7 +2,6 @@ env
 env-wsl1
 node_modules
 downloader/downloader/secret_settings.py
-docker-compose.yml
 static/*
 whoopiepie_postgres
 

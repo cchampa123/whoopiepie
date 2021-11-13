@@ -1,0 +1,71 @@
+version: '3.7'
+services:
+
+  db:
+    image: postgres:12.2
+    restart: always
+    container_name: whoopiepie_db
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ${PGDATA_DIRECTORY}:/var/lib/postgresql/data
+    expose:
+      - 5432
+
+  whoopiepie:
+    build:
+      context: .
+    container_name: whoopiepie
+    networks:
+      - main_network
+      - default
+    expose:
+      - 8000
+    volumes:
+      - ${WHOOPIEPIE_ROOT}:/whoopiepie
+      - ${STATIC_ROOT}:/static
+      - ${PLEX_ROOT_SETTING}:/plex
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      WHOOPIEPIE_ROOT: ${WHOOPIEPIE_ROOT}
+      PLEX_ROOT_SETTING: ${PLEX_ROOT_SETTING}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      ALLOWED_HOST_1: ${ALLOWED_HOST_1}
+      ALLOWED_HOST_2: ${ALLOWED_HOST_2}
+      STATIC_ROOT: ${STATIC_ROOT}
+      PLEX_USERNAME: ${PLEX_USERNAME}
+      PLEX_PASSWORD: ${PLEX_PASSWORD}
+      PLEX_SERVERNAME: ${PLEX_SERVERNAME}
+      CELERY_BROKER: ${CELERY_BROKER}
+      DEBUG_SETTING: 'true'
+
+  celery:
+    build:
+      context: .
+    container_name: whoopiepie_celery
+    entrypoint: celery -A downloader worker -l INFO
+    volumes:
+      - ${WHOOPIEPIE_ROOT}:/whoopiepie
+      - ${PLEX_ROOT_SETTING}:/plex
+    depends_on:
+      - whoopiepie
+      - redis_whoopiepie
+    env_file:
+      - ./.env
+  
+  redis_whoopiepie:
+    image: "redis"
+    container_name: redis_whoopiepie
+
+networks:
+    main_network:
+        external: true
+        name: main_network
+
