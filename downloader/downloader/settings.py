@@ -44,27 +44,48 @@ INSTALLED_APPS = [
     'rest_framework',
     'workout',
     'knox',
+    'oauth2_provider',
+    'corsheaders',
     'django_filters',
 ]
 
+LOGIN_URL='/accounts/login/'
+
+OAUTH2_PROVIDER = {
+    "OIDC_ENABLED": True,
+    "OIDC_RSA_PRIVATE_KEY": os.environ.get("OIDC_RSA_PRIVATE_KEY"),
+    "OAUTH2_VALIDATOR_CLASS": "downloader.oauth_validator.CustomOAuth2Validator",
+    "SCOPES": {
+        "openid": "OpenID Connect scope",
+        "read": "Read scope",
+        "write": "Write scope"
+    },
+}
+ACCESS_TOKEN_EXPIRE_SECONDS = 300
+CORS_ORIGIN_ALLOW_ALL = True
+REQUEST_APPROVAL_PROMPT='auto'
 AUTH_USER_MODEL = 'accounts.User'
-AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend', 'django.contrib.auth.backends.ModelBackend']
+AUTHENTICATION_BACKENDS = ['oauth2_provider.backends.OAuth2Backend', 'accounts.backends.EmailBackend', 'django.contrib.auth.backends.ModelBackend']
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     #'PAGE_SIZE': 5,
 }
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'downloader.urls'

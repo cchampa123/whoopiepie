@@ -9,6 +9,13 @@ from knox.models import AuthToken
 from .models import WhoopiePieUser
 from django.db.models.aggregates import Max, Min
 from django.db.models import Q, F
+from rest_framework.permissions import BasePermission
+
+class WhoopiePiePermission(BasePermission):
+    message='You do not have access to this application. Please contact the administrator.'
+
+    def has_permission(self, request, view):
+        return request.user.groups.filter(name='whoopiepie').exists()
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -29,7 +36,7 @@ class LoginAPI(generics.GenericAPIView):
 
 class UserAPI(generics.GenericAPIView):
     serializer_class = WhoopiePieUserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, WhoopiePiePermission]
 
     def get(self, request, *args, **kwargs):
         if hasattr(request.user, 'whoopiepieuser'):
@@ -43,7 +50,7 @@ class UserAPI(generics.GenericAPIView):
 
 class WorkoutViewSet(ModelViewSet):
     serializer_class = WorkoutSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, WhoopiePiePermission]
     filterset_fields = {
         'date':['gt', 'lt', 'exact', 'gte', 'lte']
     }
@@ -62,7 +69,7 @@ class WorkoutViewSet(ModelViewSet):
 
 class SectionViewSet(ModelViewSet):
     serializer_class = SectionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, WhoopiePiePermission]
     filterset_fields = {
         'workout_id':['exact']
     }
@@ -81,7 +88,7 @@ class SectionViewSet(ModelViewSet):
 
 class MovementClassViewSet(ModelViewSet):
     serializer_class = MovementClassSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, WhoopiePiePermission]
     queryset = MovementClass.objects.all().order_by('name')
     filterset_fields = {
         'name':['icontains', 'exact']
@@ -128,7 +135,7 @@ class MovementClassViewSet(ModelViewSet):
 
 class MovementInstanceViewSet(ModelViewSet):
     serializer_class = MovementInstanceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, WhoopiePiePermission]
     filterset_fields = {
         'workout_id':['exact'],
         'score_type':['exact'],

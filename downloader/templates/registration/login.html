@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <h2 class='text-center'>Login</h2>
+  <div class='text-center'>
+    <img src="{% static 'croissant/croissant.png' %}" alt="logo">
+  </div>
+  <h5 class='text-center'>With Croissant</h5>
+  <div class='container'>
+    <form method="post">
+      {% csrf_token %}
+      <div class='row col-12 p-1'>
+        <div class='row col-12'>
+          Email Address:
+        </div>
+        <div class='row col-12'>
+        {{form.username}}
+        </div>
+      </div>
+      <div class='row col-12 p-1'>
+        <div class='row col-12'>
+          Password:
+        </div>
+        <div class='row col-12'>
+          {{form.password}}
+        </div>
+      </div>
+      <div class='row col-12 p-1'>
+        <div class='row col-12'>
+          <button class='btn col-12 btn-narrow' type="submit">Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <input type="hidden" name="next" value="{{ next }}" />
+  <style>
+    input {
+      display:'inline-block';
+      flex-basis:100%;
+      border-radius:.25rem;
+      border-color:#00A0B0;
+      background-color: #00A0B0;
+    }
+    body {
+      background-color: #0F65A1;
+    }
+    button {
+      background-color: #6A4A3C
+    }
+  </style>
+{% endblock %}

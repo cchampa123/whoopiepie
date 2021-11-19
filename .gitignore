@@ -4,6 +4,8 @@ node_modules
 downloader/downloader/secret_settings.py
 static/*
 whoopiepie_postgres
+oidc.key
+docker-compose-dev.yml
 
 ### Django ###
 *.log
