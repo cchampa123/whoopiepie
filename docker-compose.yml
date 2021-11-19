@@ -28,7 +28,7 @@ services:
       - ${WHOOPIEPIE_ROOT}:/whoopiepie
       - ${STATIC_ROOT}:/static
       - ${PLEX_ROOT_SETTING}:/plex
-    env-file:
+    env_file:
       - ./.env
 
   celery:
