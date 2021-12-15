@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DEBUG_SETTING'))
 USE_X_FORWARDED_HOST = True
-FORCE_SCRIPT_NAME='/api'
+#FORCE_SCRIPT_NAME='/api'
 ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOST' in key]
 
 PLEX_ROOT = '/plex'
