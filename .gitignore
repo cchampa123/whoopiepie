@@ -2,6 +2,7 @@ env
 env-wsl1
 node_modules
 downloader/downloader/secret_settings.py
+downloader/downloader/settings.py
 static/*
 whoopiepie_postgres
 oidc.key
