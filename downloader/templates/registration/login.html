@@ -3,52 +3,59 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-  <h2 class='text-center'>Login</h2>
-  <div class='text-center'>
-    <img src="{% static 'croissant/croissant.png' %}" alt="logo">
-  </div>
-  <h5 class='text-center'>With Croissant</h5>
-  <div class='container'>
+<div class='container pt-5'>
+  <div class='card shadow-lg rounded'>
+    <div class='card-header'>
+      <h2 class='text-center'>Login</h2>
+      <div class='text-center'>
+        <img src="{% static 'croissant/croissant.png' %}" alt="logo">
+      </div>
+      <h5 class='text-center'>With Croissant</h5>
+    </div>
     <form method="post">
       {% csrf_token %}
-      <div class='row col-12 p-1'>
-        <div class='row col-12'>
-          Email Address:
-        </div>
-        <div class='row col-12'>
-        {{form.username}}
-        </div>
+      <div class='card-body'>
+        {{form.non_field_errors}}
+        <div>Email Address:</div>
+          {{form.name.errors}}
+          <input
+            type='email'
+            id="id_username"
+            name="username"
+            class='form-control'
+            {% if form.name.value != None %}value="{{ form.name.value|stringformat:'s' }}"{% endif %}
+          />
+        <div>Password:</div>
+        <input
+          type='password'
+          id="id_password"
+          name="password"
+          class='form-control'
+          {% if form.password.value != None %}value="{{ form.password.value|stringformat:'s' }}"{% endif %}
+        />
+        {{form.password.errors}}
       </div>
-      <div class='row col-12 p-1'>
-        <div class='row col-12'>
-          Password:
-        </div>
-        <div class='row col-12'>
-          {{form.password}}
-        </div>
-      </div>
-      <div class='row col-12 p-1'>
-        <div class='row col-12'>
+      <div class='card-footer'>
           <button class='btn col-12 btn-narrow' type="submit">Login</button>
-        </div>
       </div>
     </form>
   </div>
   <input type="hidden" name="next" value="{{ next }}" />
-  <style>
-    input {
-      display:'inline-block';
-      flex-basis:100%;
-      border-radius:.25rem;
-      border-color:#00A0B0;
-      background-color: #00A0B0;
-      overflow:auto;
-    }
-    body {
-      background-color: #0F65A1;
-    }
-    .btn {
-      background-color: #6A4A3C;
-    }
-  </style>
+</div>
+<style>
+  input {
+    display:'inline-block';
+    flex-basis:100%;
+    border-radius:.25rem;
+    border-color:#00A0B0;
+    background-color: #00A0B0;
+    overflow:auto;
+  }
+  body {
+    background-color: #D7E5F0;
+  }
+  .btn {
+    background-color: #C4A484;
+  }
+</style>
 {% endblock %}
