@@ -17,7 +17,7 @@ services:
 
   whoopiepie:
     build:
-      context: .
+      context: ${WHOOPIEPIE_CONTEXT}
     container_name: whoopiepie
     networks:
       - main_network
@@ -53,7 +53,7 @@ services:
 
   celery:
     build:
-      context: .
+      context: ${WHOOPIEPIE_CONTEXT}
     container_name: whoopiepie_celery
     entrypoint: celery -A downloader worker -l INFO
     volumes:
