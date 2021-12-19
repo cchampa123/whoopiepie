@@ -27,6 +27,11 @@ services:
       - ${WHOOPIEPIE_ROOT}:/whoopiepie
       - ${STATIC_ROOT}:/static
       - ${PLEX_ROOT_SETTING}:/plex
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTERNAME}.entrypoints=${ENTRYPOINT}
+      - traefik.http.routers.${ROUTERNAME}.rule=Host(`${ALLOWED_HOST_1}`)
+      - traefik.http.middlewares.${MIDDLEWARENAME}.stripprefix.prefixes=${FORCE_SCRIPT_NAME}
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
