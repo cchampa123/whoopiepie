@@ -4,7 +4,6 @@ node_modules
 static/*
 whoopiepie_postgres
 oidc.key
-docker-compose-dev.yml
 
 ### Django ###
 *.log
