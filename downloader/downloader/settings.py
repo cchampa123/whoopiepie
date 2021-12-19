@@ -15,7 +15,6 @@ import base64
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -27,6 +26,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = bool(os.environ.get('DEBUG_SETTING'))
 USE_X_FORWARDED_HOST = True
 FORCE_SCRIPT_NAME=os.environ.get('FORCE_SCRIPT_NAME')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATIC_URL = os.path.join(FORCE_SCRIPT_NAME, '/static/')
+WHITENOISE_STATIC_PREFIX='/static/'
+
 ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOST' in key]
 
 PLEX_ROOT = '/plex'
@@ -161,8 +164,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = '/static/'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
