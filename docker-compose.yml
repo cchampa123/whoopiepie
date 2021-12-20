@@ -32,7 +32,7 @@ services:
       - traefik.http.routers.${ROUTERNAME}.entrypoints=${ENTRYPOINT}
       - traefik.http.routers.${ROUTERNAME}.rule=Host(`${ALLOWED_HOST_1}`)
       - traefik.http.middlewares.${MIDDLEWARENAME}.stripprefix.prefixes=${FORCE_SCRIPT_NAME}
-      - traefik.http.routers.${ROUTERNAME}.middlewares=${MIDDLEWARENAME}
+      - traefik.http.routers.${ROUTERNAME}.middlewares=${MIDDLEWARENAME}@docker
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
