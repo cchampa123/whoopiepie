@@ -27,6 +27,12 @@ services:
       - ${WHOOPIEPIE_ROOT}:/whoopiepie
       - ${STATIC_ROOT}:/static
       - ${PLEX_ROOT_SETTING}:/plex
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTERNAME}.entrypoints=${ENTRYPOINT}
+      - traefik.http.routers.${ROUTERNAME}.rule=Host(`${ALLOWED_HOST_1}`)
+      - traefik.http.middlewares.${MIDDLEWARENAME}.stripprefix.prefixes=${FORCE_SCRIPT_NAME}
+      - traefik.http.routers.${ROUTERNAME}.middlewares=${MIDDLEWARENAME}@docker
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -49,6 +55,7 @@ services:
       FORCE_SCRIPT_NAME: ${FORCE_SCRIPT_NAME}
       LOGIN_URL: ${LOGIN_URL}
       OIDC_RSA_PRIVATE_KEY: ${OIDC_RSA_PRIVATE_KEY}
+      DEBUG_SETTING: ${DEBUG}
 
   celery:
     image: whoopiepie
