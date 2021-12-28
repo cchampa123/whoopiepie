@@ -69,7 +69,8 @@ OAUTH2_PROVIDER = {
         "read": "Read scope",
         "write": "Write scope"
     },
-    "ACCESS_TOKEN_EXPIRE_SECONDS":300
+    "ACCESS_TOKEN_EXPIRE_SECONDS":300,
+    "REFRESH_TOKEN_EXPIRE_SECONDS":604800
 }
 CORS_ORIGIN_ALLOW_ALL = True
 REQUEST_APPROVAL_PROMPT='auto'
