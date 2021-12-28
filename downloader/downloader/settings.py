@@ -27,7 +27,7 @@ DEBUG = bool(os.environ.get('DEBUG_SETTING'))
 USE_X_FORWARDED_HOST = True
 FORCE_SCRIPT_NAME=os.environ.get('FORCE_SCRIPT_NAME')
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-STATIC_URL = os.path.join(FORCE_SCRIPT_NAME, '/static/')
+STATIC_URL = '{}/static/'.format(FORCE_SCRIPT_NAME)
 WHITENOISE_STATIC_PREFIX='/static/'
 
 ALLOWED_HOSTS = [value for key, value in os.environ.items() if 'ALLOWED_HOST' in key]
