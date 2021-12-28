@@ -53,6 +53,7 @@ services:
       FORCE_SCRIPT_NAME: ${FORCE_SCRIPT_NAME}
       LOGIN_URL: ${LOGIN_URL}
       OIDC_RSA_PRIVATE_KEY: ${OIDC_RSA_PRIVATE_KEY}
+      DEBUG_SETTING: 'true'
 
   celery:
     build:

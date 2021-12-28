@@ -1,0 +1,19 @@
+<div>
+  {{ wizard.management_form }}
+  {% for field in wizard.form %}
+  <div class='row'>
+    {{ field.label_tag }}
+        {% if field.help_text %}
+          <sup>{{ field.help_text }}</sup>
+        {% endif %}
+        {% for error in field.errors %}
+           <div class="row">
+             <div class="alert alert-danger">{{error}}</div>
+           </div>
+        {% endfor %}
+        <div class='col-12 d-flex'>
+          {{ field }}
+        </div>
+  </div>
+  {% endfor %}
+</div>

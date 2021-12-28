@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class='container pt-5'>
+  <div class='card shadow-lg rounded'>
+    <div class='card-header'>
+      <h2 class='text-center'>Login</h2>
+      <div class='text-center'>
+        <img src="{% static 'croissant/croissant.png' %}" alt="logo">
+      </div>
+      <h5 class='text-center'>With Croissant</h5>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <div class='card-body'>
+        {{form.non_field_errors}}
+        <div>Email Address:</div>
+          {{form.name.errors}}
+          <input
+            type='email'
+            id="id_username"
+            name="username"
+            class='form-control'
+            {% if form.name.value != None %}value="{{ form.name.value|stringformat:'s' }}"{% endif %}
+          />
+        <div>Password:</div>
+        <input
+          type='password'
+          id="id_password"
+          name="password"
+          class='form-control'
+          {% if form.password.value != None %}value="{{ form.password.value|stringformat:'s' }}"{% endif %}
+        />
+        {{form.password.errors}}
+      </div>
+      <div class='card-footer'>
+          <button class='btn col-12 btn-narrow' type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+  <input type="hidden" name="next" value="{{ next }}" />
+</div>
+{% endblock %}

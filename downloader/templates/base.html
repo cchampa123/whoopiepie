@@ -10,8 +10,42 @@
 </head>
 
 <body>
+  {% load static %}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   <div id="content">
-      {% block content %}{% endblock %}
+    <div class='container pt-5'>
+      <div class='card shadow-lg rounded'>
+        <div class='card-header'>
+          <h2 class='text-center'>Login</h2>
+          <div class='text-center'>
+            <img src="{% static 'croissant/croissant.png' %}" alt="logo">
+          </div>
+          <h5 class='text-center'>With Croissant</h5>
+        </div>
+        <div class='card-body'>
+          {% block content %}{% endblock %}
+        </div>
   </div>
 </body>
+<style>
+  input {
+    display:'inline-block';
+    flex-basis:100%;
+    border-radius:.25rem;
+    overflow:auto;
+  }
+  input:focus {
+    border-color:#D7E5F0
+  }
+  body {
+    background-color: #D7E5F0;
+  }
+  .btn {
+    background-color: #C4A484;
+    border-color: #C4A484
+  }
+  .btn:hover{
+    background-color: #b88149;
+    border-color: #b88149
+  }
+</style>

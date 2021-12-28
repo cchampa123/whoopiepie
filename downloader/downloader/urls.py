@@ -21,8 +21,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('downloader/', include('youtube_downloader.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    #path('auth/', include('accounts.urls')),
+    path('auth/', include('accounts.urls', namespace='two_factor')),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('workout/', include('workout.urls'))
 ]

@@ -49,11 +49,16 @@ INSTALLED_APPS = [
     'workout',
     'knox',
     'oauth2_provider',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
     'corsheaders',
     'django_filters',
 ]
 
-LOGIN_URL=os.environ.get('LOGIN_URL')
+LOGIN_URL='/auth/login' #os.environ.get('LOGIN_URL')
+SETUPVIEW='/auth/two_factor/setup'
 
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
@@ -64,8 +69,8 @@ OAUTH2_PROVIDER = {
         "read": "Read scope",
         "write": "Write scope"
     },
+    "ACCESS_TOKEN_EXPIRE_SECONDS":300
 }
-ACCESS_TOKEN_EXPIRE_SECONDS = 300
 CORS_ORIGIN_ALLOW_ALL = True
 REQUEST_APPROVAL_PROMPT='auto'
 AUTH_USER_MODEL = 'accounts.User'
@@ -88,6 +93,7 @@ MIDDLEWARE = [
     #'django.middleware.csrf.CsrfViewMiddleware',
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
