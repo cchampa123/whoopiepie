@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'oauth',
-    'youtube_downloader',
     'rest_framework',
     'workout',
     'knox',
@@ -58,9 +57,9 @@ INSTALLED_APPS = [
     'django_filters',
 ]
 
-LOGIN_URL='/auth/login' #os.environ.get('LOGIN_URL')
-SETUPVIEW='/auth/two_factor/setup'
-
+LOGIN_URL=os.environ.get('LOGIN_URL')
+SETUPVIEW=os.environ.get('SETUP_VIEW')
+SESSION_COOKIE_AGE=172800
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
     "OIDC_RSA_PRIVATE_KEY": base64.b64decode(os.environ.get("OIDC_RSA_PRIVATE_KEY")).decode(),
@@ -178,6 +177,3 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.dev.json'),
     }
 }
-
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER')
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER')

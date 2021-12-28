@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth import login
-from django.views import View
 from django.conf import settings
 from urllib.parse import parse_qs
-from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from two_factor.views import LoginView, SetupView
 from two_factor.forms import TOTPDeviceForm
 import django_otp
 from two_factor import signals
+
 # Create your views here.
 class ForceSetupBeforeLogin(LoginView):
     def done(self, *args, **kwargs):
@@ -58,11 +57,4 @@ class InlineSetupView(SetupView):
         django_otp.login(self.request, device)
         parsed = parse_qs(self.request.META['QUERY_STRING'])
         redirect_url = parsed['next'][0]
-        return redirect(redirect_url)
-
-class RedirectSetupCompleteView(View):
-
-    def get(self, request):
-        full_string = request.META['QUERY_STRING']
-        redirect_url = full_string[5:]
         return redirect(redirect_url)
