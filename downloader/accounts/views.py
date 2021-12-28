@@ -7,12 +7,22 @@ from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from two_factor.views import LoginView, SetupView
 from two_factor.forms import TOTPDeviceForm
 import django_otp
+from two_factor import signals
 # Create your views here.
 class ForceSetupBeforeLogin(LoginView):
     def done(self, *args, **kwargs):
+        current_step_data = self.storage.get_step_data(self.steps.current)
+        remember = bool(current_step_data and current_step_data.get('token-remember') == 'on')
+
+        login(self.request, self.get_user())
         device = getattr(self.get_user(), 'otp_device', None)
         if device:
-            return super().done(*args, **kwargs)
+            signals.user_verified.send(sender=__name__, request=self.request,
+                                       user=self.get_user(), device=device)
+            django_otp.login(self.request, device)
+            parsed = parse_qs(self.request.META['QUERY_STRING'])
+            redirect_url = parsed['next'][0]
+            return redirect(redirect_url)
         else:
             login(self.request, self.get_user())
             return redirect('{}/?{}'.format(

@@ -1,9 +1,5 @@
 {% load i18n %}
 
-{% if cancel_url %}
-  <a href="{{ cancel_url }}"
-     class="float-right btn btn-link">{% trans "Cancel" %}</a>
-{% endif %}
 <div class='row py-2'>
   <div class='col-6'>
 {% if wizard.steps.prev %}

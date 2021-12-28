@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('downloader/', include('youtube_downloader.urls')),
     path('auth/', include('accounts.urls', namespace='two_factor')),
-    re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    re_path(r'^o/', include('oauth.urls', namespace='oauth2_provider')),
     path('workout/', include('workout.urls'))
 ]
