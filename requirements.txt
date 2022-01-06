@@ -2,7 +2,7 @@ amqp==5.0.6
 asgiref==3.2.10
 billiard==3.6.4.0
 cached-property==1.5.2
-celery==5.1.2
+celery==5.2.2
 certifi==2021.10.8
 cffi==1.14.0
 charset-normalizer==2.0.7
