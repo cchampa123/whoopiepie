@@ -49,7 +49,8 @@ class Section(models.Model):
     )
     SECTION_TYPES = (
         ('S', 'strength'),
-        ('M', 'metcon')
+        ('M', 'metcon'),
+        ('C', 'conditioning')
     )
     user = models.ForeignKey(WhoopiePieUser, on_delete = models.CASCADE)
     workout_id = models.ForeignKey(Workout, on_delete = models.CASCADE)
